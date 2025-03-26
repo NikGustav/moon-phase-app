@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>夜间观察所</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="images/icon-512x512.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .moon {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .moon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 50%;
+            transform: translate(-30%, 0);
+        }
+
+        .moon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 50%;
+            transform: translate(-10%, 0);
+        }
+
+        .main {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .menu-item:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .menu-item h3 {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        .nav-bar {
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="logo">
+                <div class="moon"></div>
+            </div>
+            <h1 style="margin-top: 10px; font-size: 20px;">夜间观察所</h1>
+        </header>
+
+        <main class="main">
+            <div class="stars" id="stars"></div>
+            <div class="menu">
+                <div class="menu-item" onclick="location.href='operate.html'">
+                    <div style="font-size: 24px;">🌙</div>
+                    <h3>月相观测</h3>
+                </div>
+                <div class="menu-item" onclick="location.href='research.html'">
+                    <div style="font-size: 24px;">🔭</div>
+                    <h3>研究所</h3>
+                </div>
+                <div class="menu-item" onclick="location.href='interior.html'">
+                    <div style="font-size: 24px;">🏠</div>
+                    <h3>观察室</h3>
+                </div>
+                <div class="menu-item" onclick="location.href='garden.html'">
+                    <div style="font-size: 24px;">🌿</div>
+                    <h3>后花园</h3>
+                </div>
+            </div>
+        </main>
+
+        <nav class="nav-bar">
+            <a href="#home" class="nav-item active">首页</a>
+            <a href="#observe" class="nav-item">观测</a>
+            <a href="#message" class="nav-item">消息</a>
+            <a href="#profile" class="nav-item">我的</a>
+        </nav>
+    </div>
+
+    <script>
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 50;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 3}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        createStars();
+
+        // 注册 Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html> 

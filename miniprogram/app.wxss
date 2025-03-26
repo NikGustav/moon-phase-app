@@ -1,0 +1,15 @@
+page {
+  background: #000000;
+  font-family: -apple-system-font, "PingFang SC", "Helvetica Neue", sans-serif;
+  color: #ffffff;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+  box-sizing: border-box;
+  position: relative;
+} 

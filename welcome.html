@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夜行观测所 - 欢迎页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .iphone-frame {
+            width: 390px;
+            height: 844px;
+            background: #1A1A1A;
+            border-radius: 55px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        
+        .notch {
+            width: 200px;
+            height: 35px;
+            background: #000;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .screen {
+            width: 375px;
+            height: 812px;
+            position: absolute;
+            top: 16px;
+            left: 7.5px;
+            overflow: hidden;
+            border-radius: 48px;
+            background: #000510;
+        }
+        
+        .side-button {
+            position: absolute;
+            width: 3px;
+            height: 60px;
+            background: #2A2A2A;
+            right: -3px;
+        }
+        
+        .volume-up { top: 100px; }
+        .volume-down { top: 170px; }
+        .power { top: 240px; }
+        
+        .home-indicator {
+            width: 135px;
+            height: 5px;
+            background: #fff;
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+
+        .starry-night {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #000510;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        .star:nth-child(1) { top: 20%; left: 20%; animation-delay: 0.4s; }
+        .star:nth-child(2) { top: 30%; left: 80%; animation-delay: 1.0s; }
+        .star:nth-child(3) { top: 40%; left: 40%; animation-delay: 1.6s; }
+        .star:nth-child(4) { top: 60%; left: 60%; animation-delay: 0.6s; }
+        .star:nth-child(5) { top: 70%; left: 30%; animation-delay: 1.2s; }
+        .star:nth-child(6) { top: 80%; left: 70%; animation-delay: 1.8s; }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.2; }
+        }
+
+        .moon-stroke {
+            fill: white;
+            stroke: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+    <div class="iphone-frame">
+        <div class="notch"></div>
+        <div class="side-button volume-up"></div>
+        <div class="side-button volume-down"></div>
+        <div class="side-button power"></div>
+        <div class="home-indicator"></div>
+        
+        <div class="screen">
+            <div class="min-h-full flex flex-col items-center justify-center relative overflow-hidden">
+                <!-- 星空背景 -->
+                <div class="starry-night">
+                    <div class="star"></div>
+                    <div class="star"></div>
+                    <div class="star"></div>
+                    <div class="star"></div>
+                    <div class="star"></div>
+                    <div class="star"></div>
+                </div>
+                
+                <!-- 主内容区域 -->
+                <div class="relative z-10 flex flex-col items-center text-center text-white px-4">
+                    <!-- 月亮图标 -->
+                    <div class="mb-8">
+                        <svg class="w-24 h-24" viewBox="0 0 64 64">
+                            <path class="moon-stroke" d="
+                                M 32,4 
+                                A 28,28 0 0 1 32,60
+                                C 22,60 16,48 16,32
+                                C 16,16 22,4 32,4
+                            "/>
+                        </svg>
+                    </div>
+                    <!-- 引导语 -->
+                    <p class="text-lg mb-4">
+                        今晚是下弦月，适合放下未完成的事物
+                    </p>
+                    <!-- 主按钮 -->
+                    <button class="bg-white bg-opacity-80 text-black px-6 py-3 rounded-full text-lg shadow-lg hover:shadow-xl transition duration-300">
+                        进入观测所
+                    </button>
+                </div>
+                
+                <!-- 底部版权信息 -->
+                <div class="absolute bottom-4 text-gray-400 text-center text-sm">
+                    <div>© 夜间观察所 · Moonpost Observatory</div>
+                    <div>All Rights Reserved</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

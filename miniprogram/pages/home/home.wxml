@@ -1,0 +1,49 @@
+<view class="container">
+  <!-- 星空背景 -->
+  <view class="starry-night">
+    <view wx:for="{{stars}}" wx:key="index" class="star" style="left: {{item.left}}%; top: {{item.top}}%; animation-delay: {{item.delay}}s;"></view>
+  </view>
+
+  <!-- 标题区域 -->
+  <view class="title-section">
+    <view class="title">
+      <view class="moon-icon"></view>
+      <text>夜间观察所</text>
+    </view>
+    <text class="subtitle">今夜月相：{{moonPhase}} · 随机信件连接开启</text>
+  </view>
+
+  <!-- 发送消息区域 -->
+  <view class="message-box {{hasSubmitted ? 'hidden' : ''}}" wx:if="{{!hasSubmitted}}">
+    <text class="message-title">📝 你今晚想说些什么？</text>
+    <textarea
+      class="message-input"
+      placeholder="写下一句话，被投送到未知角落..."
+      placeholder-class="placeholder"
+      model:value="{{outboxText}}"
+      maxlength="200"
+    ></textarea>
+    <button class="send-button" bindtap="handleSend">投出</button>
+  </view>
+
+  <!-- 发送成功提示 -->
+  <view class="success-message" wx:if="{{hasSubmitted && !showInbox}}">
+    <text>✅ 你的话语已送出，宇宙在倾听。</text>
+  </view>
+
+  <!-- 收到的消息区域 -->
+  <view class="message-box {{!showInbox ? 'hidden' : ''}}" wx:if="{{showInbox}}">
+    <text class="message-title">📨 你收到一封来自陌生人的留言：</text>
+    <text class="received-text">"{{receivedMessage}}"</text>
+    <textarea
+      wx:if="{{!hasReplied}}"
+      class="message-input"
+      placeholder="你想说些什么..."
+      placeholder-class="placeholder"
+      model:value="{{replyText}}"
+      maxlength="200"
+    ></textarea>
+    <button wx:if="{{!hasReplied}}" class="send-button" bindtap="handleReply">回信</button>
+    <text wx:if="{{hasReplied}}" class="reply-sent">📡 回信已封存，也许某天会被发现。</text>
+  </view>
+</view> 
