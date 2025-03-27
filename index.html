@@ -749,6 +749,21 @@
             stroke-linejoin: round;
         }
 
+        .loading-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         #image-upload {
             display: none;
         }
@@ -1017,7 +1032,7 @@
                         </div>
                         <h1 style="margin: 0; font-size: 24px; font-weight: normal;">今夜残月</h1>
                     </div>
-                </div>
+            </div>
 
                 <div class="message-box" style="text-align: center;">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff;">
