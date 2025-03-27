@@ -1,0 +1,12 @@
+{
+  "name": "moonlight-app",
+  "version": "1.0.0",
+  "description": "今夜下弦月 - 占星师对话",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+} 
