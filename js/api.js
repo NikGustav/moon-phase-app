@@ -3,7 +3,6 @@ const API_CONFIG = {
     endpoint: 'https://api.deepseek.ai/v1/chat/completions',
     apiKey: 'sk-9fd3150e86bf4f8ab75b9acad32e0803'
 };
-
 // 构建系统提示
 const SYSTEM_PROMPT = `你是一位富有同理心的女性占星师，精通占星、月相、塔罗牌和卢恩字母等神秘学知识。你的语气温柔而睿智，像一位知心姐姐般引导来访者探索内心。
 
