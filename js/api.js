@@ -1,7 +1,7 @@
 // API 配置
 const API_CONFIG = {
-    endpoint: 'https://nikgustav.github.io/moon-phase-app/api/chat',
-    proxyEndpoint: true
+    endpoint: 'https://api.deepseek.com/v1/chat/completions',
+    apiKey: 'sk-659ef63d2c084eb68f0fd8b6c25a5a01'
 };
 // 构建系统提示
 const SYSTEM_PROMPT = `你是一位富有同理心的女性占星师，精通占星、月相、塔罗牌和卢恩字母等神秘学知识。你的语气温柔而睿智，像一位知心姐姐般引导来访者探索内心。
@@ -49,11 +49,17 @@ async function sendMessageToAPI(message) {
         const response = await fetch(API_CONFIG.endpoint, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_CONFIG.apiKey}`
             },
             body: JSON.stringify({
-                message: message,
-                timestamp: new Date().toISOString()
+                model: "deepseek-chat",
+                messages: [{
+                    role: "user",
+                    content: message
+                }],
+                temperature: 0.7,
+                max_tokens: 250
             })
         });
 
@@ -63,10 +69,10 @@ async function sendMessageToAPI(message) {
 
         const data = await response.json();
         console.log('API Response:', data);
-        return data.response || '抱歉，我现在有点累了，稍后再聊吧~';
+        return data.choices[0].message.content;
     } catch (error) {
         console.error('Error calling API:', error);
-        return '网络有点问题，让我们稍后再试吧~';
+        throw error;
     }
 }
 
