@@ -93,4 +93,7 @@ async function analyzeImage(file) {
             error: '图片分析失败，请重试'
         };
     }
-} 
+} const API_CONFIG = {
+    endpoint: 'https://api.deepseek.ai/v1/chat/completions',
+    apiKey: 'sk-9fd3150e86bf4f8ab75b9acad32e0803'
+};
