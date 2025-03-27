@@ -1,7 +1,7 @@
 // API 配置
 const API_CONFIG = {
-    endpoint: 'https://api.deepseek.ai/v1/chat/completions',
-    apiKey: 'sk-9fd3150e86bf4f8ab75b9acad32e0803'
+    endpoint: 'https://api.deepseek.com/v1/chat/completions',
+    apiKey: 'sk-659ef63d2c084eb68f0fd8b6c25a5a01'
 };
 // 构建系统提示
 const SYSTEM_PROMPT = `你是一位富有同理心的女性占星师，精通占星、月相、塔罗牌和卢恩字母等神秘学知识。你的语气温柔而睿智，像一位知心姐姐般引导来访者探索内心。
@@ -41,10 +41,10 @@ const SYSTEM_PROMPT = `你是一位富有同理心的女性占星师，精通占
 // 对话历史记录
 let conversationHistory = [];
 
-// 调用 DeepSeek API
-async function callDeepseek(message) {
+// 发送消息到 API
+async function sendMessageToAPI(message) {
     try {
-        console.log('Sending message to DeepSeek API...');
+        console.log('Sending message to API...');
         
         const response = await fetch(API_CONFIG.endpoint, {
             method: 'POST',
@@ -53,53 +53,26 @@ async function callDeepseek(message) {
                 'Authorization': `Bearer ${API_CONFIG.apiKey}`
             },
             body: JSON.stringify({
-                model: 'deepseek-chat',
-                messages: [
-                    { role: 'system', content: SYSTEM_PROMPT },
-                    ...conversationHistory,
-                    { role: 'user', content: message }
-                ],
+                model: "deepseek-chat",
+                messages: [{
+                    role: "user",
+                    content: message
+                }],
                 temperature: 0.7,
-                max_tokens: 2000
+                max_tokens: 250
             })
         });
 
-        console.log('Response status:', response.status);
-        const responseText = await response.text();
-        console.log('Response text:', responseText);
-
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.status} - ${responseText}`);
+            throw new Error(`API request failed: ${response.status}`);
         }
 
-        const data = JSON.parse(responseText);
-        console.log('Parsed response:', data);
-
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-            throw new Error('Invalid API response format');
-        }
-
-        const reply = data.choices[0].message.content;
-
-        // 更新对话历史
-        conversationHistory.push(
-            { role: 'user', content: message },
-            { role: 'assistant', content: reply }
-        );
-
-        // 保持对话历史在合理长度
-        if (conversationHistory.length > 10) {
-            conversationHistory = conversationHistory.slice(-10);
-        }
-
-        return reply;
+        const data = await response.json();
+        console.log('API Response:', data);
+        return data.choices[0].message.content;
     } catch (error) {
-        console.error('Error calling DeepSeek API:', error);
-        console.log('Error details:', {
-            message: error.message,
-            stack: error.stack
-        });
-        return '抱歉，我暂时无法回应，请稍后再试。';
+        console.error('Error calling API:', error);
+        throw error;
     }
 }
 
@@ -118,7 +91,7 @@ async function analyzeImage(file) {
     try {
         console.log('Starting image analysis for file:', file.name);
         const imagePrompt = `我上传了一张图片，请根据图片内容，以占星师的视角给出温暖的回应。图片内容：${file.name}`;
-        const response = await callDeepseek(imagePrompt);
+        const response = await sendMessageToAPI(imagePrompt);
         
         return {
             success: true,
