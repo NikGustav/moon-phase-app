@@ -16,6 +16,31 @@
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
 
+        /* 自定义滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Firefox滚动条样式 */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
         .iphone-frame {
             position: relative;
             width: 375px;
@@ -980,6 +1005,39 @@
         div[style*="background: rgba(255,255,255,0.05)"] {
             border: none !important;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 自定义滚动条样式 */
+        .overlay-message-box::-webkit-scrollbar,
+        .page::-webkit-scrollbar,
+        .phases-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .overlay-message-box::-webkit-scrollbar-track,
+        .page::-webkit-scrollbar-track,
+        .phases-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .overlay-message-box::-webkit-scrollbar-thumb,
+        .page::-webkit-scrollbar-thumb,
+        .phases-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+
+        .overlay-message-box::-webkit-scrollbar-thumb:hover,
+        .page::-webkit-scrollbar-thumb:hover,
+        .phases-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Firefox滚动条样式 */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
     </style>
 </head>
