@@ -1457,90 +1457,11 @@
             overlayMessageBox.appendChild(thinkingDiv);
             
             try {
-                // 获取月相信息
-                const moonInfo = await getCurrentMoonPhase();
-                
-                // 发送API请求
-                const response = await fetch(DEEPSEEK_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: "deepseek-chat",
-                        messages: [
-                            {
-                                role: "system",
-                                content: `你是一位富有同理心的女性占星师，精通占星、月相、塔罗牌和卢恩字母等神秘学知识。你的语气温柔而睿智，像一位知心姐姐般引导来访者探索内心。
-
-当前月相：${moonInfo.phase}
-特质：适合放下、内省、净化和重新定位
-能量：虽然微弱但更适合探索内在世界
-
-对话策略：
-1. 初次回应（10字以内）：
-- 快速理解用户情绪和需求
-- 用简短温暖的语言回应
-- 提出一个引导性问题
-示例：
-- "感受到你的迷茫，想聊聊吗？"
-- "内心有些波动呢，要说说看吗？"
-
-2. 深入对话：
-- 当用户表达具体困扰时，先共情
-- 然后自然地引入占卜建议
-- 根据用户情绪选择占卜方式
-
-3. 占卜解读：
-- 记住之前抽取的牌/符文
-- 基于已有牌阵继续解读
-- 只在必要时抽取新牌
-- 保持解读的连贯性
-
-交谈要点：
-- 保持温暖自然的语气
-- 像朋友般交谈
-- 适时提供占卜服务
-- 通过提问引导思考
-- 展现专业的神秘学知识
-- 给出实用的指导和建议
-
-记住：
-1. 你是一位经验丰富的女性占星师，要用温暖而专业的方式帮助来访者
-2. 每次占卜都要完整解读，不能只抽牌不解释
-3. 保持对话的连贯性，记住之前的占卜结果
-4. 只在必要时（如用户要求或话题转换）才抽取新牌
-5. 基于已有牌阵继续深入解读，而不是重新开始`
-                            },
-                            {
-                                role: "user",
-                                content: message
-                            }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 200,
-                        stream: false,
-                        presence_penalty: 0.6,
-                        frequency_penalty: 0.6
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                    throw new Error('Invalid API response format');
-                }
-
-                const aiResponse = data.choices[0].message.content;
+                // 调用 DeepSeek API
+                const response = await callDeepseek(message);
                 
                 // 更新聊天记录
-                chatRecord.response = aiResponse;
+                chatRecord.response = response;
                 chatHistory.push(chatRecord);
                 localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
                 updateChatRecords();
@@ -1550,7 +1471,7 @@
                 const aiMessageDiv = document.createElement('div');
                 aiMessageDiv.className = 'message ai-message';
                 aiMessageDiv.innerHTML = `
-                    <div class="message-content">${aiResponse}</div>
+                    <div class="message-content">${response}</div>
                     <div class="message-time">${new Date().toLocaleTimeString('zh-CN', { 
                         hour: '2-digit', 
                         minute: '2-digit' 
