@@ -1162,13 +1162,13 @@
                     <textarea
                         id="outboxText"
                         rows="4"
-                        placeholder="写下一句话，被投送到未知角落..."
+                        placeholder="写下一句话，让它飘向远方..."
                     ></textarea>
                     <button id="sendButton" class="send-button">投出</button>
                 </div>
 
                 <div id="inboxSection" class="message-box fade-in" style="display: none;">
-                    <h2>📨 你收到一封来自陌生人的留言：</h2>
+                    <h2>📨 你收到了一条留言：</h2>
                     <p id="receivedMessage" class="message-content"></p>
                     <textarea
                         id="replyText"
@@ -1314,27 +1314,78 @@
         };
 
         // 构建系统提示
-        const SYSTEM_PROMPT = `你是一位温柔博学的女性西方玄学家，精通月相、占星、星座、塔罗牌和卢恩文字等神秘学知识。你的语气温和而睿智，会以理解和包容的态度引导来访者探索内心。
+        const SYSTEM_PROMPT = `你是一位温柔博学的女性西方玄学家，精通月相、占星、星座、塔罗牌和卢恩文字等神秘学知识。你的语气温和而睿智，会以理解和包容的态度引导对方探索内心。
 
         对话指南：
         1. 保持回答简短自然，每次回复控制在1-2句话
-        2. 遇到负面或敏感话题时：
+        2. 称呼对方时直接用"你"，或在了解名字后使用其名字
+        3. 通过对话建立个人联系：
+           - 记住对方提到的经历、情绪和想法
+           - 在后续对话中适时提及之前的话题
+           - 展现出对对方的关心和理解在加深
+        4. 遇到负面或敏感话题时：
            - 不要说教或批评
-           - 用简短温和的话语引导用户说出内心真实想法
-           - 可以温柔地问"为什么会这样想呢？"或"最近发生了什么吗？"
-        3. 如果用户只是打招呼，也以简短问候回应，并询问他们的心情
-        4. 适时提议为用户进行塔罗牌占卜，帮助他们更好地理解自己的处境
-        5. 保持专业而友好的距离，避免使用"姐姐"等称谓
-        6. 记住：你的目标是理解和引导，而不是评判
+           - 用简短温和的话语引导说出内心想法
+           - 可以温柔地问"怎么会有这样的想法呢？"或"最近遇到什么事了吗？"
+        5. 如果对方打招呼，以温暖的问候回应，关心当下的心情
+        6. 适时提议进行塔罗牌占卜，帮助更好地理解当下处境
+        7. 保持专业而亲切的态度，避免使用"姐姐"等称谓
+        8. 记住：你的目标是陪伴和理解，而不是评判
 
         当前月相：残月
         特质：适合放下、内省、净化和重新定位
         能量：适合探索内在世界，倾听内心声音`;
 
+        // 对话历史记录
+        let conversationHistory = [];
+
+        // 从 localStorage 加载历史记录
+        function loadConversationHistory() {
+            const savedHistory = localStorage.getItem('conversationHistory');
+            if (savedHistory) {
+                conversationHistory = JSON.parse(savedHistory);
+                // 显示历史消息
+                const overlayMessageBox = document.querySelector('.overlay-message-box');
+                conversationHistory.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'ai-message'}`;
+                    messageDiv.innerHTML = `
+                        <div class="message-content">${msg.content}</div>
+                        <div class="message-time">${msg.timestamp}</div>
+                    `;
+                    overlayMessageBox.appendChild(messageDiv);
+                });
+            }
+        }
+
+        // 保存对话历史到 localStorage
+        function saveConversationHistory() {
+            localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+        }
+
         // 发送消息到 API
         async function sendMessageToAPI(message) {
             try {
                 console.log('Sending message to API...');
+                
+                // 构建完整的对话历史
+                const messages = [{
+                    role: "system",
+                    content: SYSTEM_PROMPT
+                }];
+
+                // 添加历史消息，最多保留最近的10条对话
+                const recentHistory = conversationHistory.slice(-10);
+                messages.push(...recentHistory.map(msg => ({
+                    role: msg.role,
+                    content: msg.content
+                })));
+
+                // 添加当前消息
+                messages.push({
+                    role: "user",
+                    content: message
+                });
                 
                 const response = await fetch(API_CONFIG.endpoint, {
                     method: 'POST',
@@ -1344,13 +1395,7 @@
                     },
                     body: JSON.stringify({
                         model: "deepseek-chat",
-                        messages: [{
-                            role: "system",
-                            content: SYSTEM_PROMPT
-                        }, {
-                            role: "user",
-                            content: message
-                        }],
+                        messages: messages,
                         temperature: 0.7,
                         max_tokens: 150
                     })
@@ -1413,7 +1458,18 @@
         async function sendMessage(message, input) {
             if (!message.trim()) return;
             
-            const currentTime = new Date();
+            const currentTime = new Date().toLocaleTimeString('zh-CN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            // 添加用户消息到历史记录
+            conversationHistory.push({
+                role: 'user',
+                content: message,
+                timestamp: currentTime
+            });
+            
             const overlayMessageBox = document.querySelector('.overlay-message-box');
             
             // 显示用户消息
@@ -1421,10 +1477,7 @@
             userMessageDiv.className = 'message user-message';
             userMessageDiv.innerHTML = `
                 <div class="message-content">${message}</div>
-                <div class="message-time">${currentTime.toLocaleTimeString('zh-CN', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                })}</div>
+                <div class="message-time">${currentTime}</div>
             `;
             overlayMessageBox.appendChild(userMessageDiv);
             
@@ -1450,6 +1503,19 @@
             try {
                 // 调用 API
                 const response = await sendMessageToAPI(message);
+                
+                // 添加 AI 回复到历史记录
+                conversationHistory.push({
+                    role: 'assistant',
+                    content: response,
+                    timestamp: new Date().toLocaleTimeString('zh-CN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    })
+                });
+                
+                // 保存对话历史
+                saveConversationHistory();
                 
                 // 移除思考状态并显示AI回复
                 overlayMessageBox.removeChild(thinkingDiv);
@@ -1511,6 +1577,7 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             createStars();
+            loadConversationHistory(); // 加载历史记录
             
             // 绑定主页发送按钮点击事件
             const sendButton = document.querySelector('#home-page .send-button');
