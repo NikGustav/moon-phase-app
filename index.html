@@ -1030,6 +1030,289 @@
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
+
+        /* 用户信息收集页面样式 */
+        .user-info-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            color: #fff;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .info-form {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.05) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M6 8L2 4h8z'/%3E%3C/svg%3E") no-repeat right 16px center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-input {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .radio-input:checked::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radio-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+
+        .continue-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 32px;
+        }
+
+        .continue-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .continue-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 用户信息弹窗样式 */
+        .user-info-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .user-info-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .user-info-modal {
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 90%;
+            max-width: 320px;
+            margin: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .user-info-overlay.active .user-info-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .info-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.05) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M6 8L2 4h8z'/%3E%3C/svg%3E") no-repeat right 16px center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-input {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .radio-input:checked::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radio-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+
+        .continue-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 32px;
+        }
+
+        .continue-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .continue-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -1055,12 +1338,55 @@
                         今晚是残月，<br>
                         适合放下未完成的事物
                     </div>
-                    <button class="start-button" onclick="switchPage('home-page', document.querySelector('.nav-item'))">
+                    <button class="start-button" onclick="startApp()">
                         开启今夜
                     </button>
                     <div class="copyright">
                         <div>© 夜间观察所 · Moonpost Observatory</div>
                         <div>All Rights Reserved</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户信息收集弹窗 -->
+            <div class="user-info-overlay" id="user-info-overlay">
+                <div class="user-info-modal">
+                    <h2 class="title">完善个人信息</h2>
+                    <div class="info-form">
+                        <div class="form-group">
+                            <label class="form-label">昵称</label>
+                            <input type="text" class="form-input" id="nickname" placeholder="输入你的昵称">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">出生年月日</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" class="form-input" id="birthyear" placeholder="年" maxlength="4" style="width: 80px;">
+                                <input type="text" class="form-input" id="birthmonth" placeholder="月" maxlength="2" style="width: 60px;">
+                                <input type="text" class="form-input" id="birthday" placeholder="日" maxlength="2" style="width: 60px;">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">出生时间</label>
+                            <input type="time" class="form-input" id="birthtime">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">性别</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="男" class="radio-input">
+                                    <span class="radio-label">男</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="gender" value="女" class="radio-input">
+                                    <span class="radio-label">女</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="continue-button" onclick="saveUserInfo()">继续</button>
                     </div>
                 </div>
             </div>
@@ -1139,10 +1465,14 @@
 
                 <div class="message-box">
                     <div class="info-panel">
-                        <div style="color: #fff; font-size: 18px;">夜空守望者</div>
-                        <div>观测记录：12次</div>
-                        <div>累计时长：36小时</div>
-                        <div>最常观测：残月</div>
+                        <div id="profile-nickname" style="color: #fff; font-size: 24px; margin-bottom: 16px;">夜空守望者</div>
+                        <div id="profile-constellation" style="color: rgba(255,255,255,0.8); font-size: 16px; margin-bottom: 8px;"></div>
+                        <div id="profile-birthinfo" style="color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 16px;"></div>
+                        <div style="color: rgba(255,255,255,0.6); font-size: 14px;">
+                            <div>观测记录：0次</div>
+                            <div>累计时长：0小时</div>
+                            <div>最常观测：残月</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1609,6 +1939,195 @@
                     }
                 });
             }
+        });
+
+        function startApp() {
+            // 清除所有存储的用户数据
+            localStorage.removeItem('userInfo');
+            localStorage.removeItem('conversationHistory');
+            
+            // 显示信息收集弹窗
+            const overlay = document.getElementById('user-info-overlay');
+            overlay.style.display = 'flex';
+            
+            // 使用 requestAnimationFrame 确保过渡动画正常工作
+            requestAnimationFrame(() => {
+                overlay.classList.add('active');
+            });
+        }
+
+        function getConstellation(month, day) {
+            const dates = [20,19,21,20,21,22,23,23,23,24,22,21];
+            const signs = ["摩羯座","水瓶座","双鱼座","白羊座","金牛座","双子座",
+                         "巨蟹座","狮子座","处女座","天秤座","天蝎座","射手座","摩羯座"];
+            return day < dates[month-1] ? signs[month-1] : signs[month];
+        }
+
+        function saveUserInfo() {
+            const nickname = document.getElementById('nickname').value;
+            const birthyear = document.getElementById('birthyear').value;
+            const birthmonth = document.getElementById('birthmonth').value;
+            const birthday = document.getElementById('birthday').value;
+            const birthtime = document.getElementById('birthtime').value;
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+
+            if (!nickname || !birthyear || !birthmonth || !birthday || !gender) {
+                alert('请填写昵称、出生年月日和性别');
+                return;
+            }
+
+            // 格式化日期
+            const birthdate = `${birthyear}-${birthmonth.padStart(2, '0')}-${birthday.padStart(2, '0')}`;
+
+            // 计算星座
+            const constellation = getConstellation(parseInt(birthmonth), parseInt(birthday));
+
+            const userInfo = {
+                nickname,
+                birthdate,
+                birthtime: birthtime || '未知',
+                gender,
+                constellation
+            };
+
+            // 保存用户信息
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+            // 更新个人页面信息
+            updateProfileInfo(userInfo);
+
+            // 关闭弹窗并进入主页
+            const overlay = document.getElementById('user-info-overlay');
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                // 进入主页
+                switchPage('home-page');
+                document.querySelector('.nav-bar').style.display = 'flex';
+            }, 300);
+        }
+
+        function updateProfileInfo(userInfo) {
+            const nicknameElement = document.getElementById('profile-nickname');
+            const constellationElement = document.getElementById('profile-constellation');
+            const birthinfoElement = document.getElementById('profile-birthinfo');
+
+            if (nicknameElement && constellationElement && birthinfoElement) {
+                nicknameElement.textContent = userInfo.nickname;
+                constellationElement.textContent = userInfo.constellation;
+                birthinfoElement.textContent = `${userInfo.gender} · ${userInfo.birthdate.split('-')[0]}年生`;
+                if (userInfo.birthtime !== '未知') {
+                    birthinfoElement.textContent += ` · ${userInfo.birthtime}`;
+                }
+            }
+        }
+
+        // 页面加载时检查并更新用户信息
+        window.addEventListener('load', function() {
+            const userInfo = localStorage.getItem('userInfo');
+            if (userInfo) {
+                updateProfileInfo(JSON.parse(userInfo));
+            }
+        });
+
+        // 确保页面加载时重置状态
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            
+            // 重置所有页面状态
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 激活欢迎页
+            const welcomePage = document.getElementById('welcome-page');
+            if (welcomePage) {
+                welcomePage.classList.add('active');
+            }
+            
+            // 隐藏导航栏
+            const navBar = document.querySelector('.nav-bar');
+            if (navBar) {
+                navBar.style.display = 'none';
+            }
+        });
+
+        // 添加自动跳转功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthyear = document.getElementById('birthyear');
+            const birthmonth = document.getElementById('birthmonth');
+            const birthday = document.getElementById('birthday');
+
+            // 年份输入处理
+            birthyear.addEventListener('input', function(e) {
+                if (this.value.length === 4) {
+                    // 验证年份是否合理
+                    const year = parseInt(this.value);
+                    if (year >= 1900 && year <= new Date().getFullYear()) {
+                        birthmonth.focus();
+                    } else {
+                        alert('请输入有效的年份');
+                        this.value = '';
+                    }
+                }
+            });
+
+            // 月份输入处理
+            birthmonth.addEventListener('input', function(e) {
+                if (this.value.length === 2) {
+                    // 验证月份是否合理
+                    const month = parseInt(this.value);
+                    if (month >= 1 && month <= 12) {
+                        birthday.focus();
+                    } else {
+                        alert('请输入有效的月份（1-12）');
+                        this.value = '';
+                    }
+                }
+            });
+
+            // 日期输入处理
+            birthday.addEventListener('input', function(e) {
+                if (this.value.length === 2) {
+                    // 验证日期是否合理
+                    const day = parseInt(this.value);
+                    const month = parseInt(birthmonth.value);
+                    const year = parseInt(birthyear.value);
+                    
+                    // 获取该月的最大天数
+                    const maxDays = new Date(year, month, 0).getDate();
+                    
+                    if (day >= 1 && day <= maxDays) {
+                        // 日期有效，可以继续
+                    } else {
+                        alert(`请输入有效的日期（1-${maxDays}）`);
+                        this.value = '';
+                    }
+                }
+            });
+
+            // 添加键盘事件处理
+            birthyear.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0) {
+                    e.preventDefault();
+                }
+            });
+
+            birthmonth.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0) {
+                    birthyear.focus();
+                    birthyear.setSelectionRange(birthyear.value.length, birthyear.value.length);
+                    e.preventDefault();
+                }
+            });
+
+            birthday.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0) {
+                    birthmonth.focus();
+                    birthmonth.setSelectionRange(birthmonth.value.length, birthmonth.value.length);
+                    e.preventDefault();
+                }
+            });
         });
     </script>
 </body>
