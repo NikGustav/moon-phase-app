@@ -574,18 +574,18 @@
             }
         }
 
-        .user-message {
-            margin-left: auto;
-            text-align: right;
-            transform-origin: right bottom;
-        }
-
         .message-content {
             padding: 16px 20px;
             border-radius: 24px;
             line-height: 1.6;
             position: relative;
             overflow: hidden;
+        }
+
+        .user-message {
+            margin-left: auto;
+            text-align: right;
+            transform-origin: right bottom;
         }
 
         .user-message .message-content {
@@ -619,10 +619,7 @@
         }
 
         .user-message::before {
-            right: -8px;
-            border-radius: 0 0 0 16px;
-            box-shadow: -8px 8px 0 rgba(255, 255, 255, 0.1);
-            background: transparent;
+            display: none;
         }
 
         .ai-message::before {
