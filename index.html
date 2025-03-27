@@ -713,10 +713,10 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
-            padding: 12px;
+            padding: 8px;
             box-sizing: border-box;
             display: flex;
-            gap: 12px;
+            gap: 8px;
             align-items: center;
         }
 
@@ -732,6 +732,7 @@
             transition: all 0.3s ease;
             padding: 0;
             border: none;
+            flex-shrink: 0;
         }
 
         .camera-button:hover {
@@ -741,8 +742,15 @@
         .camera-button svg {
             width: 18px;
             height: 18px;
+            stroke: #ffffff;
+            fill: none;
+            stroke-width: 1.5;
             stroke-linecap: round;
             stroke-linejoin: round;
+        }
+
+        #image-upload {
+            display: none;
         }
 
         .overlay-input {
@@ -750,10 +758,10 @@
             background: transparent;
             border: none;
             color: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.5;
             resize: none;
-            padding: 6px;
+            padding: 6px 8px;
             height: 32px;
             min-height: 32px;
             font-family: inherit;
@@ -762,6 +770,10 @@
 
         .overlay-input:focus {
             outline: none;
+        }
+
+        .overlay-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .overlay-send {
@@ -778,6 +790,7 @@
             transition: all 0.3s ease;
             padding: 0;
             margin: 0;
+            flex-shrink: 0;
         }
 
         .overlay-send:hover {
@@ -1115,16 +1128,12 @@
                     <div class="overlay-input-area">
                         <label for="image-upload" class="camera-button">
                             <svg viewBox="0 0 24 24">
-                                <path d="M21 19V7a2 2 0 0 0-2-2h-3.2L14 3H10L8.2 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                                <circle cx="12" cy="12" r="3" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                                <circle cx="12" cy="13" r="4" stroke="#ffffff" stroke-width="1.5" fill="none"/>
                             </svg>
                         </label>
-                        <input type="file" id="image-upload" accept="image/*">
-                        <textarea 
-                            class="overlay-input" 
-                            placeholder="写下你的想法..." 
-                            rows="1"
-                        ></textarea>
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        <textarea class="overlay-input" placeholder="写下你的想法..." rows="1"></textarea>
                         <button class="overlay-send">↑</button>
                     </div>
                 </div>
