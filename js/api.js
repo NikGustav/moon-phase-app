@@ -1,7 +1,6 @@
 // API 配置
 const API_CONFIG = {
-    endpoint: 'https://api.deepseek.com/v1/chat/completions',
-    apiKey: 'sk-659ef63d2c084eb68f0fd8b6c25a5a01'
+    endpoint: 'https://api.deepseek.com/v1/chat/completions'
 };
 
 // 构建系统提示
@@ -148,12 +147,11 @@ async function sendMessageToAPI(message) {
     try {
         console.log('Sending message to API...');
         
-        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        const response = await fetch(API_CONFIG.endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer sk-659ef63d2c084eb68f0fd8b6c25a5a01`,
-                'Access-Control-Allow-Origin': '*'
+                'Authorization': 'Bearer sk-659ef63d2c084eb68f0fd8b6c25a5a01'
             },
             body: JSON.stringify({
                 model: "deepseek-chat",
@@ -181,7 +179,7 @@ async function sendMessageToAPI(message) {
         return data.choices[0].message.content;
     } catch (error) {
         console.error('Error calling API:', error);
-        throw error;
+        return '抱歉，我暂时无法回应，请稍后再试';
     }
 }
 
