@@ -148,11 +148,12 @@ async function sendMessageToAPI(message) {
     try {
         console.log('Sending message to API...');
         
-        const response = await fetch(API_CONFIG.endpoint, {
+        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                'Authorization': `Bearer sk-659ef63d2c084eb68f0fd8b6c25a5a01`,
+                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify({
                 model: "deepseek-chat",
