@@ -1,7 +1,8 @@
 // API 配置
 const API_CONFIG = {
     endpoint: 'https://api.deepseek.com/v1/chat/completions',
-    apiKey: 'sk-659ef63d2c084eb68f0fd8b6c25a5a01'
+    apiKey: 'sk-659ef63d2c084eb68f0fd8b6c25a5a01',
+    proxyUrl: 'https://nikgustav.github.io/moon-phase-app/api/chat'  // 添加代理 URL
 };
 
 // 构建系统提示
@@ -148,11 +149,10 @@ async function sendMessageToAPI(message) {
     try {
         console.log('Sending message to API...');
         
-        const response = await fetch(API_CONFIG.endpoint, {
+        const response = await fetch(API_CONFIG.proxyUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 model: "deepseek-chat",
