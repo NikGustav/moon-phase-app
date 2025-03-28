@@ -143,11 +143,9 @@ const SYSTEM_PROMPT = `你是一位富有同理心的女性占星师，精通占
 // 对话历史记录
 let conversationHistory = [];
 
-// 发送消息到 API
-async function sendMessageToAPI(message) {
+// 发送请求到 API
+async function sendRequest(messages) {
     try {
-        console.log('Sending message to API...');
-        
         const response = await fetch(API_CONFIG.endpoint, {
             method: 'POST',
             headers: {
@@ -155,19 +153,10 @@ async function sendMessageToAPI(message) {
                 'Authorization': `Bearer ${API_CONFIG.apiKey}`
             },
             body: JSON.stringify({
-                model: "deepseek-chat",
-                messages: [
-                    {
-                        role: "system",
-                        content: SYSTEM_PROMPT
-                    },
-                    {
-                        role: "user",
-                        content: message
-                    }
-                ],
+                model: 'deepseek-chat',
+                messages: messages,
                 temperature: 0.7,
-                max_tokens: 250
+                max_tokens: 2000
             })
         });
 
@@ -176,10 +165,9 @@ async function sendMessageToAPI(message) {
         }
 
         const data = await response.json();
-        console.log('API Response:', data);
         return data.choices[0].message.content;
     } catch (error) {
-        console.error('Error calling API:', error);
+        console.error('Error:', error);
         throw error;
     }
 }
@@ -199,7 +187,10 @@ async function analyzeImage(file) {
     try {
         console.log('Starting image analysis for file:', file.name);
         const imagePrompt = `我上传了一张图片，请根据图片内容，以占星师的视角给出温暖的回应。图片内容：${file.name}`;
-        const response = await sendMessageToAPI(imagePrompt);
+        const response = await sendRequest([
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: imagePrompt }
+        ]);
         
         return {
             success: true,
