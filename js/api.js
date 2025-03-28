@@ -145,8 +145,6 @@ let conversationHistory = [];
 // 发送消息到 API
 async function sendMessageToAPI(message) {
     try {
-        console.log('Sending message to API...');
-        
         const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -171,15 +169,15 @@ async function sendMessageToAPI(message) {
         });
 
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`);
+            console.error('API Error:', response.status);
+            return '抱歉，我暂时无法回应，请稍后再试。';
         }
 
         const data = await response.json();
-        console.log('API Response:', data);
         return data.choices[0].message.content;
     } catch (error) {
-        console.error('Error calling API:', error);
-        return '抱歉，我暂时无法回应，请稍后再试';
+        console.error('Error:', error);
+        return '抱歉，我暂时无法回应，请稍后再试。';
     }
 }
 
