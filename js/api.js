@@ -147,7 +147,7 @@ async function sendMessageToAPI(message) {
     try {
         console.log('Sending message to API...');
         
-        const response = await fetch(API_CONFIG.endpoint, {
+        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
