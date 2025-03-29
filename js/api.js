@@ -18,10 +18,23 @@ let conversationHistory = [];
 // 发送消息到 API
 async function sendMessageToAPI(message) {
     try {
-        // 如果没有配置 API key，直接返回备用响应
-        if (!API_CONFIG.apiKey || API_CONFIG.apiKey === 'YOUR-API-KEY-HERE') {
-            console.log('API key not configured, using fallback response');
-            return getFallbackResponse();
+        // 如果启用了备用响应或API配置无效，直接返回备用响应
+        if (API_CONFIG.useFallback || !API_CONFIG.apiKey || API_CONFIG.apiKey === 'YOUR-API-KEY-HERE') {
+            console.log('Using fallback response');
+            const response = getFallbackResponse();
+            
+            // 保存对话历史
+            conversationHistory.push(
+                { role: "user", content: message },
+                { role: "assistant", content: response }
+            );
+            
+            // 保持对话历史在合理范围内
+            if (conversationHistory.length > 10) {
+                conversationHistory = conversationHistory.slice(-10);
+            }
+            
+            return response;
         }
 
         const requestBody = {
