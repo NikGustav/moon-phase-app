@@ -1,8 +1,4 @@
-// API 配置
-const API_CONFIG = {
-    endpoint: 'https://api.deepseek.com/v1/chat/completions',
-    apiKey: 'sk-659ef63d2c084eb68f0fd8b6c25a5a01'
-};
+import { API_CONFIG, getFallbackResponse } from './config.js';
 
 // 系统提示词
 const SYSTEM_PROMPT = `你是一位温柔博学的女性西方玄学家，精通月相、占星、星座、塔罗牌和卢恩文字等神秘学知识。
@@ -22,8 +18,6 @@ let conversationHistory = [];
 // 发送消息到 API
 async function sendMessageToAPI(message) {
     try {
-        console.log('开始发送请求:', message);
-
         const requestBody = {
             model: "deepseek-chat",
             messages: [
@@ -37,41 +31,29 @@ async function sendMessageToAPI(message) {
                 }
             ],
             temperature: 0.7,
-            max_tokens: 2000,
-            stream: false
+            max_tokens: 2000
         };
-
-        console.log('请求体:', JSON.stringify(requestBody, null, 2));
 
         const response = await fetch(API_CONFIG.endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_CONFIG.apiKey}`,
-                'Accept': 'application/json'
+                'Authorization': `Bearer ${API_CONFIG.apiKey}`
             },
             body: JSON.stringify(requestBody)
         });
 
-        console.log('响应状态:', response.status);
-
         if (!response.ok) {
-            const errorData = await response.json();
-            console.error('API 错误:', errorData);
-            throw new Error(`API 请求失败: ${response.status}`);
+            // 如果主要 API 失败，返回备用响应
+            return getFallbackResponse();
         }
 
         const data = await response.json();
-        console.log('API 响应:', data);
-
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-            throw new Error('无效的响应格式');
-        }
-
         return data.choices[0].message.content;
     } catch (error) {
         console.error('API 调用错误:', error);
-        throw error;
+        // 发生错误时返回备用响应
+        return getFallbackResponse();
     }
 }
 
@@ -103,4 +85,7 @@ async function analyzeImage(file) {
             error: '图片分析失败，请重试'
         };
     }
-} 
+}
+
+// 导出函数
+export { sendMessageToAPI, getMoonPhase };
