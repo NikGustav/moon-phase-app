@@ -1,6 +1,6 @@
 // API 配置
 const API_CONFIG = {
-    endpoint: 'https://api.moonphase-ai.com/v1/chat',
+    endpoint: 'https://api.deepseek.com/v1/chat/completions',
     apiKey: 'sk-decd1e2a3d674f8facddbb62efc99706'
 };
 

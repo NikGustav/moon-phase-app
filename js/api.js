@@ -25,6 +25,7 @@ async function sendMessageToAPI(message) {
         }
 
         const requestBody = {
+            model: "deepseek-chat",
             messages: [
                 {
                     role: "system",
@@ -35,7 +36,9 @@ async function sendMessageToAPI(message) {
                     role: "user",
                     content: message
                 }
-            ]
+            ],
+            temperature: 0.7,
+            max_tokens: 2000
         };
 
         console.log('Sending request to API:', API_CONFIG.endpoint);
@@ -55,11 +58,12 @@ async function sendMessageToAPI(message) {
         }
 
         const data = await response.json();
+        const aiResponse = data.choices[0].message.content;
         
         // 保存对话历史
         conversationHistory.push(
             { role: "user", content: message },
-            { role: "assistant", content: data.response }
+            { role: "assistant", content: aiResponse }
         );
         
         // 保持对话历史在合理范围内
@@ -67,7 +71,7 @@ async function sendMessageToAPI(message) {
             conversationHistory = conversationHistory.slice(-10);
         }
 
-        return data.response;
+        return aiResponse;
     } catch (error) {
         console.error('API 调用错误:', error);
         return getFallbackResponse();
