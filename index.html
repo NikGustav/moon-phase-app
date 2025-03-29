@@ -737,22 +737,7 @@
         }
 
         .camera-button {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 0;
-            border: none;
-            flex-shrink: 0;
-        }
-
-        .camera-button:hover {
-            background: rgba(255, 255, 255, 0.2);
+            display: none !important;
         }
 
         .camera-button svg {
@@ -781,7 +766,7 @@
         }
 
         #image-upload {
-            display: none;
+            display: none !important;
         }
 
         .overlay-input {
@@ -1313,89 +1298,6 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-
-        .image-upload-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .image-upload-button {
-            background: transparent;
-            border: none;
-            padding: 8px;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-        }
-
-        .image-upload-button:hover {
-            opacity: 1;
-        }
-
-        .image-preview {
-            position: relative;
-            margin: 8px 0;
-            max-width: 200px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px;
-            display: none;
-        }
-
-        .image-preview img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 6px;
-        }
-
-        .remove-image {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(0, 0, 0, 0.6);
-            border: none;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .remove-image:hover {
-            background: rgba(0, 0, 0, 0.8);
-            transform: scale(1.1);
-        }
-
-        /* 添加图片消息样式 */
-        .message-image {
-            margin-top: 8px;
-            max-width: 200px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px;
-        }
-        
-        .message-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 6px;
-        }
-        
-        .message-content {
-            display: flex;
-            flex-direction: column;
-        }
     </style>
 </head>
 <body>
@@ -1496,21 +1398,10 @@
                     <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff;">
                         <span>你今晚想说些什么？</span>
                     </div>
-                    <div id="home-image-preview" class="image-preview" style="display: none; margin: 16px auto; max-width: 200px; position: relative;">
-                        <img id="home-preview-image" src="" alt="预览" style="width: 100%; height: auto; border-radius: 8px;">
-                        <button class="remove-image" onclick="removeHomeImage()">×</button>
-                    </div>
                     <textarea class="message-input" rows="3" style="text-align: center;"></textarea>
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px;">
-                        <input type="file" id="home-image-upload" accept="image/*" style="display: none;" onchange="handleHomeImageUpload(event)">
-                        <button class="camera-button" onclick="document.getElementById('home-image-upload').click();">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                                <circle cx="12" cy="13" r="4" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                            </svg>
-                        </button>
-                        <button class="send-button">投出</button>
-                    </div>
+                    <button class="send-button">
+                        投出
+                    </button>
                 </div>
             </div>
 
@@ -1583,25 +1474,23 @@
 
                 <div id="outboxSection" class="message-box fade-in">
                     <h2>📝 你今晚想说些什么？</h2>
-                    <div id="divine-image-preview" class="image-preview" style="display: none; margin: 16px auto; max-width: 200px; position: relative;">
-                        <img id="divine-preview-image" src="" alt="预览" style="width: 100%; height: auto; border-radius: 8px;">
-                        <button class="remove-image" onclick="removeDivineImage()">×</button>
-                    </div>
                     <textarea
                         id="outboxText"
                         rows="4"
                         placeholder="写下一句话，让它飘向远方..."
                     ></textarea>
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px;">
-                        <input type="file" id="divine-image-upload" accept="image/*" style="display: none;" onchange="handleDivineImageUpload(event)">
-                        <button class="camera-button" onclick="document.getElementById('divine-image-upload').click();">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                                <circle cx="12" cy="13" r="4" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                            </svg>
-                        </button>
-                        <button id="sendButton" class="send-button">投出</button>
-                    </div>
+                    <button id="sendButton" class="send-button">投出</button>
+                </div>
+
+                <div id="inboxSection" class="message-box fade-in" style="display: none;">
+                    <h2>📨 你收到了一条留言：</h2>
+                    <p id="receivedMessage" class="message-content"></p>
+                    <textarea
+                        id="replyText"
+                        rows="3"
+                        placeholder="你想说些什么..."
+                    ></textarea>
+                    <button id="replyButton" class="send-button">回信</button>
                 </div>
             </div>
 
@@ -1616,17 +1505,6 @@
                         <!-- 消息内容会在这里动态添加 -->
                     </div>
                     <div class="overlay-input-area">
-                        <button class="camera-button" onclick="document.getElementById('image-upload').click();">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                                <circle cx="12" cy="13" r="4" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                            </svg>
-                        </button>
-                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
-                        <div id="image-preview" class="image-preview" style="display: none;">
-                            <img id="preview-image" src="" alt="预览">
-                            <button class="remove-image" onclick="removeImage()">×</button>
-                        </div>
                         <textarea class="overlay-input" placeholder="写下你的想法..." rows="1"></textarea>
                         <button class="overlay-send">↑</button>
                     </div>
@@ -1804,52 +1682,25 @@
                     conversationHistory: conversationHistory.slice(-4) // 保留最近4条对话
                 };
 
-                // 构建请求体
-                const requestBody = {
-                    model: 'deepseek-chat',
-                    messages: [
-                        {
-                            role: 'system',
-                            content: SYSTEM_PROMPT + '\n当前用户信息：' + JSON.stringify(contextInfo)
-                        },
-                        ...conversationHistory.slice(-4)
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 150
-                };
-
-                // 如果是图片消息
-                if (typeof message === 'object' && message.image) {
-                    requestBody.messages.push({
-                        role: 'user',
-                        content: [
-                            {
-                                type: 'text',
-                                text: message.text || '请解读这张图片'
-                            },
-                            {
-                                type: 'image_url',
-                                image_url: {
-                                    url: message.image
-                                }
-                            }
-                        ]
-                    });
-                } else {
-                    // 普通文本消息
-                    requestBody.messages.push({
-                        role: 'user',
-                        content: message
-                    });
-                }
-
                 const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer sk-9868621019774f89a8b51339995428cc'
                     },
-                    body: JSON.stringify(requestBody)
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: SYSTEM_PROMPT + '\n当前用户信息：' + JSON.stringify(contextInfo)
+                            },
+                            ...conversationHistory.slice(-4),
+                            { role: 'user', content: message }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 150
+                    })
                 });
 
                 if (!response.ok) {
@@ -2267,10 +2118,8 @@
         });
 
         // 添加情感识别和占卜引导功能
-        window.userMood = null;
-        window.userEmotion = null;
-        window.homeCurrentImage = null;
-        window.currentImage = null;
+        let userMood = null;
+        let userEmotion = null;
 
         async function analyzeUserMood(message) {
             try {
@@ -2278,7 +2127,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer YOUR_DEEPSEEK_API_KEY'
+                        'Authorization': 'Bearer YOUR_DEEPSEEK_API_KEY' // 需要替换为实际的API密钥
                     },
                     body: JSON.stringify({
                         model: "deepseek-chat",
@@ -2350,13 +2199,13 @@
             if (conversationHistory.length <= 4) {
                 const analysis = await analyzeUserMood(message);
                 if (analysis) {
-                    window.userMood = analysis.mood;
-                    window.userEmotion = analysis.emotion;
+                    userMood = analysis.mood;
+                    userEmotion = analysis.emotion;
                 }
             }
 
             // 生成占卜回应
-            const response = await generateDivinationResponse(message, window.userMood, window.userEmotion);
+            const response = await generateDivinationResponse(message, userMood, userEmotion);
 
             // 添加AI回应到历史记录
             conversationHistory.push({
@@ -2402,587 +2251,6 @@
                     await handleUserMessage(message);
                     this.value = '';
                 }
-            }
-        });
-
-        let currentImage = null;
-
-        // 图片上传处理
-        document.getElementById('image-upload').addEventListener('change', async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // 检查文件类型
-            if (!file.type.startsWith('image/')) {
-                alert('请选择图片文件');
-                return;
-            }
-
-            // 检查文件大小（限制为50MB）
-            if (file.size > 50 * 1024 * 1024) {
-                alert('图片大小不能超过50MB');
-                return;
-            }
-
-            try {
-                // 创建预览
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewImage = document.getElementById('preview-image');
-                    previewImage.src = e.target.result;
-                    document.getElementById('image-preview').style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-                
-                // 保存当前图片引用
-                currentImage = file;
-            } catch (error) {
-                console.error('图片处理错误:', error);
-                alert('图片处理失败，请重试');
-            }
-        });
-
-        // 移除图片
-        function removeImage() {
-            document.getElementById('image-preview').style.display = 'none';
-            document.getElementById('preview-image').src = '';
-            document.getElementById('image-upload').value = '';
-            currentImage = null;
-        }
-
-        // 修改发送消息的处理
-        document.querySelector('.overlay-send').addEventListener('click', async function() {
-            const input = document.querySelector('.overlay-input');
-            const message = input.value.trim();
-            
-            if (!message && !currentImage) return;
-            
-            try {
-                let finalMessage = message;
-                
-                // 如果有图片，先处理图片
-                if (currentImage) {
-                    const reader = new FileReader();
-                    const imageData = await new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(currentImage);
-                    });
-                    
-                    // 显示用户消息（包含图片）
-                    const currentTime = new Date().toLocaleTimeString('zh-CN', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                    });
-                    
-                    const overlayMessageBox = document.querySelector('.overlay-message-box');
-                    const userMessageDiv = document.createElement('div');
-                    userMessageDiv.className = 'message user-message';
-                    userMessageDiv.innerHTML = `
-                        <div class="message-content">
-                            ${message ? `<div>${message}</div>` : ''}
-                            <div class="message-image">
-                                <img src="${imageData}" alt="用户上传的图片">
-                            </div>
-                        </div>
-                        <div class="message-time">${currentTime}</div>
-                    `;
-                    overlayMessageBox.appendChild(userMessageDiv);
-                    
-                    // 将图片数据添加到消息中
-                    finalMessage = {
-                        text: message,
-                        image: imageData
-                    };
-                    
-                    // 清空输入框并滚动
-                    input.value = '';
-                    overlayMessageBox.scrollTo({
-                        top: overlayMessageBox.scrollHeight,
-                        behavior: 'smooth'
-                    });
-                    
-                    // 显示思考状态
-                    const thinkingDiv = document.createElement('div');
-                    thinkingDiv.className = 'message ai-message';
-                    thinkingDiv.innerHTML = `
-                        <div class="thinking">
-                            <div class="thinking-dot"></div>
-                            <div class="thinking-dot"></div>
-                            <div class="thinking-dot"></div>
-                        </div>
-                    `;
-                    overlayMessageBox.appendChild(thinkingDiv);
-                    
-                    try {
-                        // 调用 API 进行图片解读
-                        const response = await sendMessageToAPI(finalMessage);
-                        
-                        // 添加 AI 回复到历史记录
-                        conversationHistory.push({
-                            role: 'assistant',
-                            content: response,
-                            timestamp: new Date().toLocaleTimeString('zh-CN', { 
-                                hour: '2-digit', 
-                                minute: '2-digit' 
-                            })
-                        });
-                        
-                        // 保存对话历史
-                        saveConversationHistory();
-                        
-                        // 移除思考状态并显示AI回复
-                        overlayMessageBox.removeChild(thinkingDiv);
-                        const aiMessageDiv = document.createElement('div');
-                        aiMessageDiv.className = 'message ai-message';
-                        aiMessageDiv.innerHTML = `
-                            <div class="message-content">${response}</div>
-                            <div class="message-time">${new Date().toLocaleTimeString('zh-CN', { 
-                                hour: '2-digit', 
-                                minute: '2-digit' 
-                            })}</div>
-                        `;
-                        overlayMessageBox.appendChild(aiMessageDiv);
-                    } catch (error) {
-                        console.error('Error:', error);
-                        overlayMessageBox.removeChild(thinkingDiv);
-                        
-                        const errorMessageDiv = document.createElement('div');
-                        errorMessageDiv.className = 'message ai-message';
-                        errorMessageDiv.innerHTML = `
-                            <div class="message-content">抱歉，我暂时无法解读这张图片，请稍后再试。</div>
-                            <div class="message-time">${new Date().toLocaleTimeString('zh-CN', { 
-                                hour: '2-digit', 
-                                minute: '2-digit' 
-                            })}</div>
-                        `;
-                        overlayMessageBox.appendChild(errorMessageDiv);
-                    }
-                } else {
-                    // 如果没有图片，使用普通的文本消息发送
-                    await sendMessage(finalMessage, input);
-                }
-                
-                // 清理图片预览
-                if (currentImage) {
-                    removeImage();
-                }
-                
-                // 滚动到底部
-                overlayMessageBox.scrollTo({
-                    top: overlayMessageBox.scrollHeight,
-                    behavior: 'smooth'
-                });
-            } catch (error) {
-                console.error('发送消息错误:', error);
-                alert('发送失败，请重试');
-            }
-        });
-
-        // 全局变量声明
-        window.homeCurrentImage = null;
-
-        // 图片上传处理函数
-        function handleHomeImageUpload(event) {
-            console.log('图片上传事件触发');
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (!file.type.startsWith('image/')) {
-                alert('请选择图片文件');
-                return;
-            }
-
-            if (file.size > 50 * 1024 * 1024) {
-                alert('图片大小不能超过50MB');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                console.log('图片读取完成');
-                const previewImage = document.getElementById('home-preview-image');
-                const previewContainer = document.getElementById('home-image-preview');
-                if (previewImage && previewContainer) {
-                    previewImage.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                    window.homeCurrentImage = file;
-                    console.log('图片已加载到预览');
-                } else {
-                    console.log('未找到预览元素', {previewImage, previewContainer});
-                }
-            };
-            reader.onerror = function(error) {
-                console.error('图片读取错误:', error);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // 移除图片函数
-        function removeHomeImage() {
-            console.log('移除图片');
-            const previewContainer = document.getElementById('home-image-preview');
-            const previewImage = document.getElementById('home-preview-image');
-            const imageUpload = document.getElementById('home-image-upload');
-            
-            if (previewContainer) previewContainer.style.display = 'none';
-            if (previewImage) previewImage.src = '';
-            if (imageUpload) imageUpload.value = '';
-            window.homeCurrentImage = null;
-            console.log('图片已移除');
-        }
-
-        // 修改主页发送按钮点击事件
-        document.querySelector('#home-page .send-button').addEventListener('click', async function() {
-            const messageInput = document.querySelector('#home-page .message-input');
-            const message = messageInput.value.trim();
-            
-            if (!message && !window.homeCurrentImage) return;
-            
-            try {
-                let finalMessage = message;
-                
-                // 如果有图片，先处理图片
-                if (window.homeCurrentImage) {
-                    const reader = new FileReader();
-                    const imageData = await new Promise((resolve, reject) => {
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(window.homeCurrentImage);
-                    });
-                    
-                    // 显示覆盖页面
-                    showOverlay();
-                    
-                    // 等待覆盖页面显示完成
-                    setTimeout(() => {
-                        const overlayMessageBox = document.querySelector('.overlay-message-box');
-                        const currentTime = new Date().toLocaleTimeString('zh-CN', { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                        });
-                        
-                        // 显示用户消息（包含图片）
-                        const userMessageDiv = document.createElement('div');
-                        userMessageDiv.className = 'message user-message';
-                        userMessageDiv.innerHTML = `
-                            <div class="message-content">
-                                ${message ? `<div>${message}</div>` : ''}
-                                <div class="message-image">
-                                    <img src="${imageData}" alt="用户上传的图片">
-                                </div>
-                            </div>
-                            <div class="message-time">${currentTime}</div>
-                        `;
-                        overlayMessageBox.appendChild(userMessageDiv);
-                        
-                        // 将图片数据添加到消息中
-                        finalMessage = {
-                            text: message || '请解读这张图片',
-                            image: imageData
-                        };
-                        
-                        // 清空输入框并滚动
-                        messageInput.value = '';
-                        overlayMessageBox.scrollTo({
-                            top: overlayMessageBox.scrollHeight,
-                            behavior: 'smooth'
-                        });
-                        
-                        // 显示思考状态
-                        const thinkingDiv = document.createElement('div');
-                        thinkingDiv.className = 'message ai-message';
-                        thinkingDiv.innerHTML = `
-                            <div class="thinking">
-                                <div class="thinking-dot"></div>
-                                <div class="thinking-dot"></div>
-                                <div class="thinking-dot"></div>
-                            </div>
-                        `;
-                        overlayMessageBox.appendChild(thinkingDiv);
-                        
-                        // 调用 API 进行图片解读
-                        sendMessageToAPI(finalMessage)
-                            .then(response => {
-                                // 添加 AI 回复到历史记录
-                                conversationHistory.push({
-                                    role: 'assistant',
-                                    content: response,
-                                    timestamp: new Date().toLocaleTimeString('zh-CN', { 
-                                        hour: '2-digit', 
-                                        minute: '2-digit' 
-                                    })
-                                });
-                                
-                                // 保存对话历史
-                                saveConversationHistory();
-                                
-                                // 移除思考状态并显示AI回复
-                                overlayMessageBox.removeChild(thinkingDiv);
-                                const aiMessageDiv = document.createElement('div');
-                                aiMessageDiv.className = 'message ai-message';
-                                aiMessageDiv.innerHTML = `
-                                    <div class="message-content">${response}</div>
-                                    <div class="message-time">${new Date().toLocaleTimeString('zh-CN', { 
-                                        hour: '2-digit', 
-                                        minute: '2-digit' 
-                                    })}</div>
-                                `;
-                                overlayMessageBox.appendChild(aiMessageDiv);
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                overlayMessageBox.removeChild(thinkingDiv);
-                                
-                                const errorMessageDiv = document.createElement('div');
-                                errorMessageDiv.className = 'message ai-message';
-                                errorMessageDiv.innerHTML = `
-                                    <div class="message-content">抱歉，我暂时无法解读这张图片，请稍后再试。</div>
-                                    <div class="message-time">${new Date().toLocaleTimeString('zh-CN', { 
-                                        hour: '2-digit', 
-                                        minute: '2-digit' 
-                                    })}</div>
-                                `;
-                                overlayMessageBox.appendChild(errorMessageDiv);
-                            });
-                    }, 300);
-                } else {
-                    // 如果没有图片，使用普通的文本消息发送
-                    showOverlay();
-                    setTimeout(() => {
-                        const overlayInput = document.querySelector('.overlay-input');
-                        overlayInput.value = message;
-                        sendMessage(message, overlayInput);
-                        messageInput.value = '';
-                    }, 300);
-                }
-                
-                // 清理图片预览
-                if (window.homeCurrentImage) {
-                    removeHomeImage();
-                }
-            } catch (error) {
-                console.error('发送消息错误:', error);
-                alert('发送失败，请重试');
-            }
-        });
-
-        // 修改主页图片上传处理
-        document.addEventListener('DOMContentLoaded', function() {
-            // 主页图片上传处理
-            const homeImageUpload = document.getElementById('home-image-upload');
-            const homeImagePreview = document.getElementById('home-preview-image');
-            const homeImagePreviewContainer = document.getElementById('home-image-preview');
-            
-            if (homeImageUpload) {
-                homeImageUpload.addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (!file) return;
-                    
-                    // 检查文件类型
-                    if (!file.type.startsWith('image/')) {
-                        alert('请选择图片文件');
-                        return;
-                    }
-                    
-                    // 检查文件大小（限制为50MB）
-                    if (file.size > 50 * 1024 * 1024) {
-                        alert('图片大小不能超过50MB');
-                        return;
-                    }
-                    
-                    // 创建预览
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        if (homeImagePreview && homeImagePreviewContainer) {
-                            homeImagePreview.src = e.target.result;
-                            homeImagePreviewContainer.style.display = 'block';
-                            window.homeCurrentImage = file;
-                            console.log('图片已加载到预览');
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            // 绑定移除图片按钮事件
-            const removeButton = document.querySelector('.remove-image');
-            if (removeButton) {
-                removeButton.onclick = function() {
-                    if (homeImagePreviewContainer) homeImagePreviewContainer.style.display = 'none';
-                    if (homeImagePreview) homeImagePreview.src = '';
-                    if (homeImageUpload) homeImageUpload.value = '';
-                    window.homeCurrentImage = null;
-                    console.log('图片已移除');
-                };
-            }
-
-            // 绑定相机按钮点击事件
-            const cameraButton = document.querySelector('.camera-button');
-            if (cameraButton) {
-                cameraButton.onclick = function() {
-                    const fileInput = document.getElementById('home-image-upload');
-                    if (fileInput) {
-                        fileInput.click();
-                    }
-                };
-            }
-        });
-
-        // 对话框图片上传相关代码
-        document.addEventListener('DOMContentLoaded', function() {
-            const imageUpload = document.getElementById('image-upload');
-            const previewImage = document.getElementById('preview-image');
-            const previewContainer = document.getElementById('image-preview');
-            const cameraButton = document.querySelector('.overlay-input-area .camera-button');
-
-            if (imageUpload) {
-                imageUpload.addEventListener('change', function(event) {
-                    console.log('对话框图片上传触发');
-                    const file = event.target.files[0];
-                    if (!file) return;
-
-                    if (!file.type.startsWith('image/')) {
-                        alert('请选择图片文件');
-                        return;
-                    }
-
-                    if (file.size > 50 * 1024 * 1024) {
-                        alert('图片大小不能超过50MB');
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        console.log('对话框图片读取完成');
-                        if (previewImage && previewContainer) {
-                            previewImage.src = e.target.result;
-                            previewContainer.style.display = 'block';
-                            window.currentImage = file;
-                            console.log('对话框图片已加载到预览');
-                        } else {
-                            console.log('未找到对话框预览元素', {previewImage, previewContainer});
-                        }
-                    };
-                    reader.onerror = function(error) {
-                        console.error('对话框图片读取错误:', error);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            // 对话框中的移除图片功能
-            const removeImageButton = document.querySelector('#image-preview .remove-image');
-            if (removeImageButton) {
-                removeImageButton.onclick = function() {
-                    console.log('移除对话框图片');
-                    if (previewContainer) previewContainer.style.display = 'none';
-                    if (previewImage) previewImage.src = '';
-                    if (imageUpload) imageUpload.value = '';
-                    window.currentImage = null;
-                };
-            }
-
-            // 对话框中的相机按钮点击事件
-            if (cameraButton) {
-                cameraButton.onclick = function() {
-                    console.log('点击对话框相机按钮');
-                    if (imageUpload) {
-                        imageUpload.click();
-                    }
-                };
-            }
-        });
-
-        // 占卜页面图片上传相关代码
-        window.divineCurrentImage = null;
-
-        function handleDivineImageUpload(event) {
-            console.log('占卜页面图片上传触发');
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (!file.type.startsWith('image/')) {
-                alert('请选择图片文件');
-                return;
-            }
-
-            if (file.size > 50 * 1024 * 1024) {
-                alert('图片大小不能超过50MB');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                console.log('占卜页面图片读取完成');
-                const previewImage = document.getElementById('divine-preview-image');
-                const previewContainer = document.getElementById('divine-image-preview');
-                if (previewImage && previewContainer) {
-                    previewImage.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                    window.divineCurrentImage = file;
-                    console.log('占卜页面图片已加载到预览');
-                } else {
-                    console.log('未找到占卜页面预览元素', {previewImage, previewContainer});
-                }
-            };
-            reader.onerror = function(error) {
-                console.error('占卜页面图片读取错误:', error);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeDivineImage() {
-            console.log('移除占卜页面图片');
-            const previewContainer = document.getElementById('divine-image-preview');
-            const previewImage = document.getElementById('divine-preview-image');
-            const imageUpload = document.getElementById('divine-image-upload');
-            
-            if (previewContainer) previewContainer.style.display = 'none';
-            if (previewImage) previewImage.src = '';
-            if (imageUpload) imageUpload.value = '';
-            window.divineCurrentImage = null;
-        }
-
-        // 占卜页面发送消息
-        document.getElementById('sendButton').addEventListener('click', async function() {
-            console.log('点击发送按钮');
-            const messageText = document.getElementById('outboxText').value.trim();
-            
-            if (!messageText && !window.divineCurrentImage) {
-                alert('请输入文字或上传图片');
-                return;
-            }
-
-            try {
-                const formData = new FormData();
-                formData.append('text', messageText);
-                if (window.divineCurrentImage) {
-                    formData.append('image', window.divineCurrentImage);
-                }
-
-                const response = await fetch('/api/divine/send', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('发送失败');
-                }
-
-                const result = await response.json();
-                console.log('发送成功:', result);
-
-                // 清空输入
-                document.getElementById('outboxText').value = '';
-                removeDivineImage();
-
-                // 显示成功提示
-                alert('发送成功！');
-
-            } catch (error) {
-                console.error('发送错误:', error);
-                alert('发送失败，请稍后重试');
             }
         });
     </script>
