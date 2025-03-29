@@ -18,22 +18,28 @@ let conversationHistory = [];
 // 发送消息到 API
 async function sendMessageToAPI(message) {
     try {
+        // 如果没有配置 API key，直接返回备用响应
+        if (!API_CONFIG.apiKey || API_CONFIG.apiKey === 'YOUR-API-KEY-HERE') {
+            console.log('API key not configured, using fallback response');
+            return getFallbackResponse();
+        }
+
         const requestBody = {
-            model: "deepseek-chat",
             messages: [
                 {
                     role: "system",
                     content: SYSTEM_PROMPT
                 },
+                ...conversationHistory,
                 {
                     role: "user",
                     content: message
                 }
-            ],
-            temperature: 0.7,
-            max_tokens: 2000
+            ]
         };
 
+        console.log('Sending request to API:', API_CONFIG.endpoint);
+        
         const response = await fetch(API_CONFIG.endpoint, {
             method: 'POST',
             headers: {
@@ -44,15 +50,26 @@ async function sendMessageToAPI(message) {
         });
 
         if (!response.ok) {
-            // 如果主要 API 失败，返回备用响应
+            console.error('API response not ok:', response.status);
             return getFallbackResponse();
         }
 
         const data = await response.json();
-        return data.choices[0].message.content;
+        
+        // 保存对话历史
+        conversationHistory.push(
+            { role: "user", content: message },
+            { role: "assistant", content: data.response }
+        );
+        
+        // 保持对话历史在合理范围内
+        if (conversationHistory.length > 10) {
+            conversationHistory = conversationHistory.slice(-10);
+        }
+
+        return data.response;
     } catch (error) {
         console.error('API 调用错误:', error);
-        // 发生错误时返回备用响应
         return getFallbackResponse();
     }
 }

@@ -1,8 +1,7 @@
 // API 配置
 const API_CONFIG = {
-    endpoint: 'https://api.deepseek.com/v1/chat/completions',
-    fallbackEndpoint: 'https://api-fallback.deepseek.com/v1/chat/completions',
-    apiKey: 'sk-659ef63d2c084eb68f0fd8b6c25a5a01'
+    endpoint: 'https://api.moonphase-ai.com/v1/chat',
+    apiKey: 'sk-decd1e2a3d674f8facddbb62efc99706'
 };
 
 // 备用响应
