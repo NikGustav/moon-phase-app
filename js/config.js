@@ -1,8 +1,10 @@
 // API 配置
 const API_CONFIG = {
     endpoint: 'https://api.deepseek.com/v1/chat/completions',
-    apiKey: 'YOUR-API-KEY-HERE', // 使用备用响应
-    useFallback: true // 启用备用响应
+    apiKey: 'sk-decd1e2a3d674f8facddbb62efc99706',
+    model: 'deepseek-chat-v3',
+    temperature: 0.7,
+    max_tokens: 2000
 };
 
 // 备用响应

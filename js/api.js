@@ -16,29 +16,25 @@ const SYSTEM_PROMPT = `你是一位温柔博学的女性西方玄学家，精通
 let conversationHistory = [];
 
 // 发送消息到 API
-async function sendMessageToAPI(message) {
+async function sendMessageToAPI(message, imageData = null) {
     try {
         // 如果启用了备用响应或API配置无效，直接返回备用响应
-        if (API_CONFIG.useFallback || !API_CONFIG.apiKey || API_CONFIG.apiKey === 'YOUR-API-KEY-HERE') {
-            console.log('Using fallback response');
-            const response = getFallbackResponse();
-            
-            // 保存对话历史
-            conversationHistory.push(
-                { role: "user", content: message },
-                { role: "assistant", content: response }
-            );
-            
-            // 保持对话历史在合理范围内
-            if (conversationHistory.length > 10) {
-                conversationHistory = conversationHistory.slice(-10);
-            }
-            
-            return response;
+        if (!API_CONFIG.apiKey || API_CONFIG.apiKey === 'YOUR-API-KEY-HERE') {
+            console.log('API key not configured, using fallback response');
+            return getFallbackResponse();
+        }
+
+        let messageContent = message;
+        if (imageData) {
+            messageContent = {
+                type: 'image',
+                image: imageData,
+                text: message
+            };
         }
 
         const requestBody = {
-            model: "deepseek-chat",
+            model: API_CONFIG.model,
             messages: [
                 {
                     role: "system",
@@ -47,11 +43,11 @@ async function sendMessageToAPI(message) {
                 ...conversationHistory,
                 {
                     role: "user",
-                    content: message
+                    content: messageContent
                 }
             ],
-            temperature: 0.7,
-            max_tokens: 2000
+            temperature: API_CONFIG.temperature,
+            max_tokens: API_CONFIG.max_tokens
         };
 
         console.log('Sending request to API:', API_CONFIG.endpoint);
@@ -75,7 +71,7 @@ async function sendMessageToAPI(message) {
         
         // 保存对话历史
         conversationHistory.push(
-            { role: "user", content: message },
+            { role: "user", content: messageContent },
             { role: "assistant", content: aiResponse }
         );
         
@@ -104,22 +100,42 @@ function getMoonPhase() {
 // 分析图片
 async function analyzeImage(file) {
     try {
-        console.log('Starting image analysis for file:', file.name);
-        const imagePrompt = `我上传了一张图片，请根据图片内容，以占星师的视角给出温暖的回应。图片内容：${file.name}`;
-        const response = await sendMessageToAPI(imagePrompt);
+        if (!file || !file.type.startsWith('image/')) {
+            throw new Error('请上传有效的图片文件');
+        }
+
+        // 检查文件大小
+        if (file.size > 10 * 1024 * 1024) { // 10MB限制
+            throw new Error('图片大小不能超过10MB');
+        }
+
+        // 读取图片文件
+        const reader = new FileReader();
+        const imageData = await new Promise((resolve, reject) => {
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error('图片读取失败'));
+            reader.readAsDataURL(file);
+        });
+
+        // 构建提示词
+        const imagePrompt = `请以占星师的视角解读这张图片，关注其中的符号、色彩和构图，并联系当前的月相（残月）给出温暖的回应。`;
+        
+        // 发送到API进行分析
+        const response = await sendMessageToAPI(imagePrompt, imageData);
         
         return {
             success: true,
-            description: response
+            description: response,
+            preview: imageData
         };
     } catch (error) {
-        console.error('Error analyzing image:', error);
+        console.error('图片分析错误:', error);
         return {
             success: false,
-            error: '图片分析失败，请重试'
+            error: error.message || '图片分析失败，请重试'
         };
     }
 }
 
 // 导出函数
-export { sendMessageToAPI, getMoonPhase };
+export { sendMessageToAPI, getMoonPhase, analyzeImage };
