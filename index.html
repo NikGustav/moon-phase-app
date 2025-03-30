@@ -2602,12 +2602,16 @@
                 messageContainer.prepend(timeElement);
             }
             
-            // 添加到对话区域
-            const conversationDiv = document.getElementById('conversation');
-            conversationDiv.appendChild(messageContainer);
-            
-            // 滚动到底部
-            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+            // 添加到对话区域 - 修复这里的选择器
+            const conversationDiv = document.querySelector('.overlay-message-box');
+            if (conversationDiv) {
+                conversationDiv.appendChild(messageContainer);
+                
+                // 滚动到底部
+                conversationDiv.scrollTop = conversationDiv.scrollHeight;
+            } else {
+                console.error('找不到消息容器元素');
+            }
             
             return messageId;
         }
