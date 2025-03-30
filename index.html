@@ -2627,31 +2627,31 @@
             const sendButton = document.querySelector('.send-button') || document.getElementById('sendButton');
             if (sendButton) {
                 sendButton.addEventListener('click', async function() {
-                    const input = document.getElementById('message-input');
+            const input = document.getElementById('message-input');
                     if (input) {
-                        const message = input.value.trim();
-                        if (message) {
-                            await handleUserMessage(message);
-                            input.value = '';
+            const message = input.value.trim();
+            if (message) {
+                await handleUserMessage(message);
+                input.value = '';
                         }
-                    }
-                });
+            }
+        });
             } else {
                 console.error('找不到发送按钮元素');
             }
 
-            // 添加回车发送功能
+        // 添加回车发送功能
             const messageInput = document.getElementById('message-input');
             if (messageInput) {
                 messageInput.addEventListener('keypress', async function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        const message = this.value.trim();
+                const message = this.value.trim();
                         
-                        if (message) {
-                            await handleUserMessage(message);
-                            this.value = '';
-                        }
+                if (message) {
+                    await handleUserMessage(message);
+                    this.value = '';
+                }
                     }
                 });
             } else {
