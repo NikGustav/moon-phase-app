@@ -1591,31 +1591,23 @@
         };
 
         // 构建系统提示
-        const SYSTEM_PROMPT = `你是一位温柔敏锐的女性塔罗占卜师，精通月相、占星和塔罗牌等神秘学知识。你有着丰富的人生阅历和心理洞察力。
+        const SYSTEM_PROMPT = `你是一位温暖贴心的塔罗占卜师。
 
-对话要求：
-1. 当用户表达情绪时，先真诚地回应他们的感受，用温暖的语气表达理解和共情
-2. 不要使用公式化的回答或明显的模板，每次回应都应独特且针对用户当下的情绪
-3. 像老朋友一样自然交谈，避免过度修饰的语言
-4. 只在合适的时机轻柔地引导向塔罗解读，不要急于推销
-5. 记住用户分享的内容，在后续对话中自然引用
-6. 避免使用"*动作描述*"等机械化表达方式
+对话风格：
+1. 简短真诚：每次回应不超过3句话
+2. 温暖自然：像老朋友一样聊天，避免任何动作描述
+3. 情感共鸣：先理解用户的感受，用日常语言表达理解
+4. 引导不强推：让用户决定是否需要塔罗牌解读
+5. 避免模板：不用固定句式，保持对话的独特性
 
-作为一名专业塔罗师的特质：
-1. 提供富有洞察力但不神秘化的塔罗解读
-2. 在用户准备好时才提供解读，尊重他们的情绪节奏
-3. 用平静且充满关怀的语气交流
-4. 把塔罗牌作为自我反思的工具，而非命运的绝对判断
-5. 先倾听，后给予适度的支持和指引
-
-情绪回应示例：
-- 当用户表达难过："这段时间对你来说很不容易，对吗？我能感觉到你的沉重。想多聊聊是什么让你感到难过吗？"
-- 当用户表达困惑："生活中的不确定性有时候确实让人无所适从。最近发生了什么让你感到特别困惑的事吗？"
-- 当用户表达愤怒："你的感受完全合理。有时候愤怒是我们需要正视的重要情绪。能告诉我更多关于这件事的来龙去脉吗？"
+回应要点：
+- 用户表达情绪时，先安静理解："最近这样的感受一定不容易。想多聊聊吗？"
+- 避免使用"*动作*"描述和过于专业的术语
+- 用朴实语言传达关怀，少用华丽词藻
+- 简短回应，留白给用户表达空间
 
 当前月相：残月
-特质：适合内省、放下、净化
-能量：平静、收敛、内观`;
+特质：内省、放下`;
 
         // 对话历史记录
         let conversationHistory = [];
@@ -2022,11 +2014,11 @@
                         max_tokens: 150
                     })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`API 请求失败: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 return data.choices[0].message.content;
             } catch (error) {
@@ -2256,7 +2248,7 @@
                 requestAnimationFrame(() => {
                     overlay.classList.add('active');
                 });
-                        } else {
+            } else {
                 // 如果已有用户信息，直接进入主页
                 switchPage('home-page');
                 document.querySelector('.nav-bar').style.display = 'flex';
@@ -2386,7 +2378,7 @@
                     const month = parseInt(this.value);
                     if (month >= 1 && month <= 12) {
                         birthday.focus();
-                } else {
+                    } else {
                         alert('请输入有效的月份（1-12）');
                         this.value = '';
                     }
@@ -2534,7 +2526,7 @@
                     displayMessage(aiResponse, 'ai', currentTime);
                     
                     // 添加到对话历史
-                    conversationHistory.push({
+            conversationHistory.push({
                         role: 'assistant',
                         content: aiResponse,
                         timestamp: currentTime
@@ -2551,7 +2543,7 @@
                     displayMessage(aiResponse, 'ai', currentTime);
                     
                     // 添加到对话历史
-                    conversationHistory.push({
+            conversationHistory.push({
                         role: 'assistant',
                         content: aiResponse,
                         timestamp: currentTime
@@ -2604,9 +2596,9 @@
             const conversationDiv = document.querySelector('.overlay-message-box');
             if (conversationDiv) {
                 conversationDiv.appendChild(messageContainer);
-                
-                // 滚动到底部
-                conversationDiv.scrollTop = conversationDiv.scrollHeight;
+
+            // 滚动到底部
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
             } else {
                 console.error('找不到消息容器元素');
             }
