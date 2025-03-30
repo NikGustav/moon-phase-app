@@ -2617,27 +2617,41 @@
             }
         }
 
-        // 修改发送消息的处理函数
-        document.getElementById('send-button').addEventListener('click', async function() {
-            const input = document.getElementById('message-input');
-            const message = input.value.trim();
-            
-            if (message) {
-                await handleUserMessage(message);
-                input.value = '';
+        // 修改发送消息的处理函数 - 使用DOMContentLoaded确保DOM已加载
+        document.addEventListener('DOMContentLoaded', function() {
+            // 使用正确的选择器找到发送按钮 - 网页上使用class="send-button"或id="sendButton"
+            const sendButton = document.querySelector('.send-button') || document.getElementById('sendButton');
+            if (sendButton) {
+                sendButton.addEventListener('click', async function() {
+                    const input = document.getElementById('message-input');
+                    if (input) {
+                        const message = input.value.trim();
+                        if (message) {
+                            await handleUserMessage(message);
+                            input.value = '';
+                        }
+                    }
+                });
+            } else {
+                console.error('找不到发送按钮元素');
             }
-        });
 
-        // 添加回车发送功能
-        document.getElementById('message-input').addEventListener('keypress', async function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                const message = this.value.trim();
-                
-                if (message) {
-                    await handleUserMessage(message);
-                    this.value = '';
-                }
+            // 添加回车发送功能
+            const messageInput = document.getElementById('message-input');
+            if (messageInput) {
+                messageInput.addEventListener('keypress', async function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const message = this.value.trim();
+                        
+                        if (message) {
+                            await handleUserMessage(message);
+                            this.value = '';
+                        }
+                    }
+                });
+            } else {
+                console.error('找不到消息输入框元素');
             }
         });
     </script>
