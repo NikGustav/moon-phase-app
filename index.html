@@ -1692,6 +1692,11 @@
                 threeCard: {
                     name: "三张牌阵",
                     description: "最常用的基础牌阵，可以解读过去、现在、未来，或问题的原因、现状、建议",
+                    positions: [
+                        "过去/原因 - 导致当前情况的过去事件或根本原因",
+                        "现在/现状 - 当前所处的情况和面临的挑战",
+                        "未来/建议 - 未来的走向或解决问题的建议"
+                    ],
                     questions: ["事业发展", "感情走向", "人际关系"],
                     interpretation: "三张牌之间存在联系，需要整体解读"
                 },
@@ -1842,13 +1847,42 @@
             let reading = `根据你的问题："${question}"\n我为你选择了${spread.name}。\n\n`;
             reading += `${spread.description}\n\n`;
             
+            // 添加牌阵位置说明
+            if (spread.name === "三张牌阵") {
+                reading += "【牌阵说明】\n";
+                reading += "- 第一张牌代表【过去/原因】- 导致当前情况的过去事件或根本原因\n";
+                reading += "- 第二张牌代表【现在/现状】- 当前所处的情况和面临的挑战\n";
+                reading += "- 第三张牌代表【未来/建议】- 未来的走向或解决问题的建议\n\n";
+            } else if (spread.name === "感情牌阵") {
+                reading += "【牌阵说明】\n";
+                reading += "六张牌分别代表：\n";
+                reading += "- 自己的态度\n- 对方的态度\n- 关系的现状\n";
+                reading += "- 有利因素\n- 不利因素\n- 关系的发展\n\n";
+            } else if (spread.name === "凯尔特十字牌阵") {
+                reading += "【牌阵说明】\n";
+                reading += "这是一个完整的十字型牌阵，每个位置有特定含义：\n";
+                reading += "1.当前处境 2.面临的挑战 3.遥远的过去 4.近期过去\n";
+                reading += "5.可能的结果 6.近期未来 7.自身态度 8.外部环境\n";
+                reading += "9.希望或恐惧 10.最终结果\n\n";
+            }
+            
+            // 逐一解读每张牌
             cards.forEach((card, index) => {
-                const position = card.position ? `【${card.position}】` : '';
+                // 根据牌阵类型确定位置名称
+                let positionName = "";
+                if (spread.name === "三张牌阵") {
+                    if (index === 0) positionName = "【过去/原因】";
+                    else if (index === 1) positionName = "【现在/现状】";
+                    else if (index === 2) positionName = "【未来/建议】";
+                } else if (card.position) {
+                    positionName = `【${card.position}】`;
+                }
+                
                 const orientation = card.isReversed ? "逆位" : "正位";
-                reading += `${position}第${index + 1}张牌：${orientation}${card.name}\n`;
+                reading += `${positionName}第${index + 1}张牌：${orientation}${card.name}\n`;
                 reading += `含义：${card.meaning}\n`;
                 
-                // 添加更多专业解读内容
+                // 添加更详细的解读内容
                 if (card.name === "愚者") {
                     reading += card.isReversed ? 
                         "这可能暗示你在当前处境中过于谨慎或缺乏行动力。考虑是否因为恐惧而错过了机会。" : 
@@ -1857,25 +1891,85 @@
                     reading += card.isReversed ? 
                         "你可能正在怀疑自己的能力，或未充分发挥你的才能。反思是什么阻碍了你的创造力和表达。" : 
                         "你拥有实现目标所需的一切工具和资源。专注于你的意图，相信自己的能力去创造改变。";
+                } else if (card.name === "战车") {
+                    reading += card.isReversed ? 
+                        "你可能正在失去方向或控制感。内部冲突可能阻碍了你的前进。找回内心的平衡和决心。" : 
+                        "这张牌象征着决心、意志力和胜利。你正驾驭着看似相反的力量，朝着目标前进。保持专注和自信。";
+                } else if (card.name === "节制") {
+                    reading += card.isReversed ? 
+                        "生活中可能存在不平衡或过度。审视哪些领域需要更多的调和与适度。" : 
+                        "这张牌提醒你平衡、耐心和适度的重要性。将看似对立的元素调和，找到中庸之道。";
+                } else if (card.name === "星星") {
+                    reading += card.isReversed ? 
+                        "你可能正经历希望的丧失或对未来的怀疑。记住，黑暗之后总会有光明。" : 
+                        "这是希望、信心和灵感的象征。即使在困难时期，宇宙也在引导你走向更光明的未来。保持信心和乐观。";
                 }
-                // 可以为更多牌添加具体解读
                 
                 reading += "\n\n";
             });
             
-            // 添加牌与牌之间的联系解读
+            // 强化牌与牌之间的联系解读
             if (cards.length > 1) {
-                reading += "牌阵整体解读：\n";
-                reading += "通过观察这些牌之间的关系，我能感受到";
+                reading += "【牌阵整体解读】\n";
                 
-                // 根据牌面组合提供更深入的见解
-                const cardNames = cards.map(c => c.name).join("、");
-                if (cardNames.includes("愚者") && cardNames.includes("魔术师")) {
-                    reading += "一个转变的过程，从无知到掌握，从潜能到实现。这表明你正处于一个重要的学习和成长阶段。";
-                } else if (cardNames.includes("女祭司") && cardNames.includes("隐士")) {
-                    reading += "强烈的内省和自我发现的主题。这个时期适合深入探索你的内心世界和潜意识。";
-                } else {
-                    reading += "你正在经历的能量流动和转变。这些牌共同指引着你前进的方向和需要关注的领域。";
+                if (spread.name === "三张牌阵") {
+                    const past = cards[0];
+                    const present = cards[1];
+                    const future = cards[2];
+                    
+                    reading += `从过去的${past.isReversed ? "逆位" : "正位"}${past.name}，到现在的${present.isReversed ? "逆位" : "正位"}${present.name}，再到未来的${future.isReversed ? "逆位" : "正位"}${future.name}，形成了一个清晰的发展脉络。\n\n`;
+                    
+                    // 添加过去到现在的联系
+                    reading += `过去与现在的联系：${past.name}的能量如何影响了当前的${present.name}？\n`;
+                    if ((past.name === "战车" && present.name === "节制") || 
+                        (past.name === "魔术师" && present.name === "力量")) {
+                        reading += "过去的主动力量转变为现在更加平衡和内敛的状态，这表明你正在学习如何更有智慧地运用自己的能量。\n\n";
+                    } else if ((past.isReversed && !present.isReversed) ||
+                               (!past.isReversed && present.isReversed)) {
+                        reading += "能量方向发生了翻转，这意味着你正在经历一个重要的转变期。\n\n";
+                    } else {
+                        reading += "能量以相似的方式流动，表明过去的模式仍在影响当前的情况。\n\n";
+                    }
+                    
+                    // 添加现在到未来的联系
+                    reading += `现在与未来的联系：当前的${present.name}将如何引导向${future.name}？\n`;
+                    if (present.name === "隐士" || present.name === "女祭司") {
+                        reading += "当前的内省和自我发现过程将引导你找到未来的方向。内在的智慧是通往未来的钥匙。\n\n";
+                    } else if (present.name === "命运之轮" || present.name === "死神") {
+                        reading += "你正处于转变的关键点。接受变化将帮助你迎接未来的可能性。\n\n";
+                    } else {
+                        reading += "现在的状态自然地演化为未来的结果，保持觉察和适应性将有助于这一过程。\n\n";
+                    }
+                    
+                    // 添加整体解读结论
+                    reading += "整体而言，这个三张牌阵显示：";
+                    if (past.isReversed && present.isReversed && !future.isReversed) {
+                        reading += "你正在从挑战中走向更积极的未来。过去和现在的困难正在转化为有价值的经验和未来的机会。";
+                    } else if (!past.isReversed && !present.isReversed && !future.isReversed) {
+                        reading += "一个平稳的发展过程，能量积极地从过去流向未来，表明你在正确的道路上。";
+                    } else if (!past.isReversed && !present.isReversed && future.isReversed) {
+                        reading += "需要注意未来可能出现的挑战。当前的积极势头可能会遇到一些阻力，提前做好准备很重要。";
+                    } else {
+                        reading += "一个复杂的发展过程，包含了挑战和机遇。关键是保持觉察，从过去学习，适应当前，并为未来做好准备。";
+                    }
+                } else if (cards.length >= 4) {
+                    // 对于其他复杂牌阵的整体解读
+                    reading += "这些牌面共同编织成一个复杂而有意义的故事。主要的主题包括：\n";
+                    
+                    // 检查牌面中的主要元素
+                    const hasStrength = cards.some(card => ["战车", "力量", "皇帝"].includes(card.name));
+                    const hasWisdom = cards.some(card => ["隐士", "女祭司", "星星"].includes(card.name));
+                    const hasChange = cards.some(card => ["死神", "塔", "命运之轮"].includes(card.name));
+                    
+                    if (hasStrength) {
+                        reading += "- 力量与意志：牌阵中的强力牌表明内在力量和决心在当前情境中至关重要。\n";
+                    }
+                    if (hasWisdom) {
+                        reading += "- 智慧与直觉：智慧牌的出现提醒你倾听内心的声音和直觉指引。\n";
+                    }
+                    if (hasChange) {
+                        reading += "- 变化与转型：变化牌预示着一个转变期，旧的模式正在瓦解，新的可能性正在出现。\n";
+                    }
                 }
                 
                 reading += "\n\n";
@@ -1893,7 +1987,7 @@
                 return "残月适合放下和释放，现在是完美的时机来结束那些不再服务于你的事物。";
             } else if (keywords.includes('开始') || keywords.includes('新')) {
                 return "虽然残月通常不适合开始新事物，但可以利用这个时期做好准备，等待新月到来。";
-            } else {
+                    } else {
                 return "残月是内省和净化的最佳时期，建议你多花时间倾听内心的声音。";
             }
         }
@@ -2164,7 +2258,7 @@
                 requestAnimationFrame(() => {
                     overlay.classList.add('active');
                 });
-            } else {
+                        } else {
                 // 如果已有用户信息，直接进入主页
                 switchPage('home-page');
                 document.querySelector('.nav-bar').style.display = 'flex';
@@ -2294,7 +2388,7 @@
                     const month = parseInt(this.value);
                     if (month >= 1 && month <= 12) {
                         birthday.focus();
-                    } else {
+                } else {
                         alert('请输入有效的月份（1-12）');
                         this.value = '';
                     }
