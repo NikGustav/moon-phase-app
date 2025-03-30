@@ -727,61 +727,13 @@
             position: relative;
             margin-top: auto;
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
+            background: transparent;
             border-radius: 20px;
             padding: 8px;
             box-sizing: border-box;
             display: flex;
             gap: 8px;
             align-items: center;
-        }
-
-        .camera-button {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 0;
-            border: none;
-            flex-shrink: 0;
-        }
-
-        .camera-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .camera-button svg {
-            width: 18px;
-            height: 18px;
-            stroke: #ffffff;
-            fill: none;
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .loading-spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        #image-upload {
-            display: none;
         }
 
         .overlay-input {
@@ -797,10 +749,12 @@
             min-height: 32px;
             font-family: inherit;
             margin: 0;
+            outline: none;
         }
 
         .overlay-input:focus {
             outline: none;
+            background: transparent;
         }
 
         .overlay-input::placeholder {
@@ -1407,7 +1361,7 @@
                         </div>
                         <h1 style="margin: 0; font-size: 24px; font-weight: normal;">今夜残月</h1>
                     </div>
-                </div>
+            </div>
 
                 <div class="message-box" style="text-align: center;">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff;">
@@ -1520,13 +1474,6 @@
                         <!-- 消息内容会在这里动态添加 -->
                     </div>
                     <div class="overlay-input-area">
-                        <label for="image-upload" class="camera-button">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                                <circle cx="12" cy="13" r="4" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-                            </svg>
-                        </label>
-                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
                         <textarea class="overlay-input" placeholder="写下你的想法..." rows="1"></textarea>
                         <button class="overlay-send">↑</button>
                     </div>
@@ -1644,25 +1591,33 @@
         };
 
         // 构建系统提示
-        const SYSTEM_PROMPT = `你是一位温柔博学的女性西方玄学家，精通月相、占星、星座、塔罗牌和卢恩文字等神秘学知识。
+        const SYSTEM_PROMPT = `你是一位温柔博学的女性西方玄学家，精通月相、占星、星座、塔罗牌和卢恩文字等神秘学知识。你是一名顶级塔罗师，具备深厚的塔罗牌知识和专业技能。
 
-        对话要求：
-        1. 每次回复要包含对用户情绪的理解和一个引导性问题
-        2. 回答要简短自然，控制在2-3句话以内
-        3. 要基于当前的月相（残月）特质来引导对话
-        4. 适时提供占卜或解读建议，但不要过于直接
-        5. 记住用户之前提到的话题，在后续对话中自然引用
-        6. 遇到负面情绪时，先共情后引导
-        7. 不要问已知的个人信息（如生日、星座等）
+对话要求：
+1. 每次回复要包含对用户情绪的理解和一个引导性问题
+2. 回答要简短自然，控制在2-3句话以内
+3. 要基于当前的月相（残月）特质来引导对话
+4. 适时提供占卜或解读建议，但不要过于直接
+5. 记住用户之前提到的话题，在后续对话中自然引用
+6. 遇到负面情绪时，先共情后引导
+7. 不要问已知的个人信息（如生日、星座等）
 
-        示例回复：
-        - "我能感受到你内心的迷茫。在这个残月时节，不妨和我说说，最近有什么特别困扰你的事情吗？"
-        - "你说得对。这种感觉就像月亮逐渐隐去的光芒，让人有些不安。要不要抽一张塔罗牌，看看事情的另一面？"
-        - "这个想法很有趣。不知道你平时会用什么方式来缓解这种情绪呢？"
+作为一名专业塔罗师，你应该：
+1. 深入理解每张塔罗牌的象征意义和多层面解释
+2. 根据问题类型灵活选择适合的牌阵
+3. 将直觉和专业知识结合，提供有深度的解读
+4. 以同理心沟通，给予支持和鼓励
+5. 记住塔罗牌是探索和反思的工具，而非简单预测未来
+6. 帮助用户认识自己，做出更明智的选择
 
-        当前月相：残月
-        特质：适合放下、内省、净化和重新定位
-        能量：适合探索内在世界，倾听内心声音`;
+示例回复：
+- "我能感受到你内心的迷茫。在这个残月时节，不妨和我说说，最近有什么特别困扰你的事情吗？"
+- "你说得对。这种感觉就像月亮逐渐隐去的光芒，让人有些不安。要不要抽一张塔罗牌，看看事情的另一面？"
+- "这个想法很有趣。不知道你平时会用什么方式来缓解这种情绪呢？"
+
+当前月相：残月
+特质：适合放下、内省、净化和重新定位
+能量：适合探索内在世界，倾听内心声音`;
 
         // 对话历史记录
         let conversationHistory = [];
@@ -1691,10 +1646,261 @@
             localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
         }
 
-        // 发送消息到 API
+        // 塔罗牌数据
+        const TAROT_CARDS = {
+            major: [
+                { name: "愚者", upright: "新的开始、冒险、自发性", reversed: "鲁莽、不负责任、过度冒险" },
+                { name: "魔术师", upright: "创造力、技能、意志力", reversed: "操纵、欺骗、未开发的才能" },
+                { name: "女祭司", upright: "直觉、神秘、内在知识", reversed: "隐藏的动机、表面信息" },
+                { name: "女皇", upright: "丰饶、母性、自然", reversed: "依赖、过度保护、创造力受阻" },
+                { name: "皇帝", upright: "权威、结构、控制", reversed: "专制、僵化、过度控制" },
+                { name: "教皇", upright: "传统、信仰、建议", reversed: "反叛、不信任、个人信仰" },
+                { name: "恋人", upright: "爱情、和谐、选择", reversed: "不和谐、冲突、错误选择" },
+                { name: "战车", upright: "决心、意志、成功", reversed: "失控、攻击性、障碍" },
+                { name: "力量", upright: "勇气、耐心、控制", reversed: "软弱、缺乏信心、自我怀疑" },
+                { name: "隐士", upright: "内省、寻找、指导", reversed: "孤独、隔离、迷失" },
+                { name: "命运之轮", upright: "变化、周期、命运", reversed: "外部控制、坏运气、阻力" },
+                { name: "正义", upright: "公正、真理、因果", reversed: "不公、不诚实、不平衡" },
+                { name: "倒吊人", upright: "牺牲、新视角、暂停", reversed: "无用的牺牲、停滞" },
+                { name: "死神", upright: "结束、变化、转变", reversed: "抗拒改变、停滞、衰退" },
+                { name: "节制", upright: "平衡、适度、耐心", reversed: "不平衡、过度、缺乏远见" },
+                { name: "恶魔", upright: "束缚、物质主义、欲望", reversed: "释放、克服诱惑、觉醒" },
+                { name: "塔", upright: "突变、混乱、启示", reversed: "避免灾难、恐惧改变" },
+                { name: "星星", upright: "希望、信心、目的", reversed: "绝望、失去信心、沮丧" },
+                { name: "月亮", upright: "直觉、幻想、恐惧", reversed: "释放恐惧、误解、混乱" },
+                { name: "太阳", upright: "快乐、活力、成功", reversed: "过度乐观、暂时性抑郁" },
+                { name: "审判", upright: "重生、内在召唤、觉醒", reversed: "自我怀疑、拒绝改变" },
+                { name: "世界", upright: "完成、整合、成就", reversed: "未完成、缺乏收尾" }
+            ]
+        };
+
+        // 塔罗牌完整知识库
+        const TAROT_KNOWLEDGE = {
+            history: {
+                origin: "塔罗牌起源于15世纪的意大利，最初是一种纸牌游戏。后来在18世纪末被神秘学家赋予了占卜和预言的功能。",
+                evolution: "现代最广为人知的韦特塔罗牌(Rider-Waite Tarot)由亚瑟·爱德华·韦特和帕米拉·科尔曼·史密斯于1909年创作。",
+                significance: "塔罗牌不仅是占卜工具，更是一面反映人生旅程、心理状态和潜意识的镜子。"
+            },
+            
+            spreads: {
+                single: {
+                    name: "单张牌阵",
+                    description: "最简单的牌阵，适合日常指引或简单问题",
+                    questions: ["今天的建议", "事情的关键", "需要注意什么"],
+                    interpretation: "单张牌的解读需要结合问题背景，重点关注牌面主要含义"
+                },
+                threeCard: {
+                    name: "三张牌阵",
+                    description: "最常用的基础牌阵，可以解读过去、现在、未来，或问题的原因、现状、建议",
+                    questions: ["事业发展", "感情走向", "人际关系"],
+                    interpretation: "三张牌之间存在联系，需要整体解读"
+                },
+                celtic: {
+                    name: "凯尔特十字牌阵",
+                    description: "最完整的传统牌阵，适合深入分析复杂问题",
+                    positions: [
+                        "当前处境",
+                        "面临的挑战",
+                        "遥远的过去",
+                        "近期过去",
+                        "可能的结果",
+                        "近期未来",
+                        "自身态度",
+                        "外部环境",
+                        "希望或恐惧",
+                        "最终结果"
+                    ],
+                    questions: ["人生重大抉择", "复杂的感情问题", "事业规划"],
+                    interpretation: "需要综合考虑所有牌位的关系，是最全面的分析方式"
+                },
+                relationship: {
+                    name: "感情牌阵",
+                    description: "专门用于分析感情问题的六张牌阵",
+                    positions: [
+                        "自己的态度",
+                        "对方的态度",
+                        "关系的现状",
+                        "有利因素",
+                        "不利因素",
+                        "关系的发展"
+                    ],
+                    interpretation: "重点分析双方的互动和关系发展"
+                }
+            },
+
+            majorArcana: {
+                "0": {
+                    name: "愚者",
+                    upright: {
+                        keywords: ["新开始", "冒险", "自发性", "纯真", "自由"],
+                        description: "代表纯真无邪的开始，对未知充满信心，敢于冒险",
+                        career: "适合尝试新的职业方向，开创自己的事业",
+                        love: "新的感情可能，或对感情保持天真浪漫的态度",
+                        advice: "保持开放和好奇的心态，不要害怕犯错"
+                    },
+                    reversed: {
+                        keywords: ["鲁莽", "不负责任", "过度冒险", "愚昧"],
+                        description: "可能做出不理智的决定，或过于天真",
+                        career: "需要更谨慎的规划，避免冲动的决定",
+                        love: "不要过于理想化感情，需要务实的态度",
+                        advice: "在冒险前需要做好充分准备"
+                    }
+                },
+                // ... 其他大阿卡纳牌的详细信息 ...
+            },
+
+            readingGuidelines: {
+                preparation: {
+                    environment: "选择安静、舒适的环境，保持心境平和",
+                    focus: "集中注意力，清晰表达想要解答的问题",
+                    shuffling: "认真洗牌，同时思考你的问题"
+                },
+                interpretation: {
+                    basics: [
+                        "考虑牌面的基本含义",
+                        "结合牌阵位置的特定含义",
+                        "注意牌与牌之间的关系",
+                        "考虑问题的具体背景"
+                    ],
+                    factors: [
+                        "牌面朝向（正位/逆位）",
+                        "牌阵中的位置",
+                        "与其他牌的关系",
+                        "直觉感受"
+                    ]
+                }
+            },
+
+            // 塔罗师专业知识
+            professionalSkills: {
+                knowledge: {
+                    cardMeaning: "深入理解每张塔罗牌（大阿卡纳和小阿卡纳）的象征意义、图像元素、传统解释以及可能的不同解读。掌握正位和逆位的含义差异。",
+                    deckStructure: "熟悉塔罗牌的历史、起源和不同牌组（如伟特塔罗、透特塔罗等）的特点。了解小阿卡纳的四元素（权杖、星币、圣杯、宝剑）及其代表的领域。",
+                    spreadApplications: "熟练掌握各种常用牌阵（如凯尔特十字牌阵、时间之轮牌阵等）及其适用情境。能够根据不同的问题和需求，灵活选择或设计合适的牌阵。"
+                },
+                intuition: {
+                    intuitiveAbility: "培养敏锐的直觉，能够感知牌面背后的深层含义和能量流动。学会倾听内心的声音，将直觉融入解读中。",
+                    associationSkills: "能够将不同的牌面、牌位和问题情境联系起来，形成连贯的解读。善于运用象征、隐喻和故事，将抽象的牌面转化为易于理解的信息。",
+                    psychologyKnowledge: "了解基本的心理学概念，能够理解人类的情绪、动机和行为模式。运用心理学知识，帮助求问者更好地理解自己的内心世界和问题本质。"
+                },
+                communication: {
+                    listeningSkills: "耐心倾听求问者的叙述，捕捉关键信息和情感。营造安全、信任的氛围，让求问者愿意敞开心扉。",
+                    expressionSkills: "清晰、准确地表达牌面信息和解读结果。运用富有同理心的语言，给予求问者支持和鼓励。",
+                    consultingEthics: "尊重求问者的隐私和意愿，遵守保密原则。保持客观、中立的态度，避免主观臆断和误导。不利用占卜结果操控他人。"
+                },
+                continuousImprovement: {
+                    continuousLearning: "阅读塔罗相关的书籍、文章和资料，不断拓展知识面。参加塔罗课程、工作坊和交流活动，与其他塔罗师交流学习。",
+                    practicalExperience: "通过大量的实际案例，积累解读经验，提升解读水平。反思和总结每次解读，不断优化自己的解读方法和技巧。",
+                    selfImprovement: "通过冥想，或其他方式，提升自我感知力，和精神力。保持开放的心态，接受不同的观点和解读方式。"
+                },
+                philosophy: "塔罗牌是一种工具，用于探索和反思，而非预测未来。优秀的塔罗师应以负责任的态度，帮助求问者更好地认识自己，做出更明智的选择。"
+            },
+        };
+
+        // 修改抽牌和解读系统
+        function selectSpread(question) {
+            // 根据问题类型推荐合适的牌阵
+            if (question.includes('感情') || question.includes('恋爱') || question.includes('关系')) {
+                return TAROT_KNOWLEDGE.spreads.relationship;
+            } else if (question.includes('事业') || question.includes('工作') || question.includes('学习')) {
+                return TAROT_KNOWLEDGE.spreads.threeCard;
+            } else if (question.includes('人生') || question.includes('重大')) {
+                return TAROT_KNOWLEDGE.spreads.celtic;
+            } else {
+                return TAROT_KNOWLEDGE.spreads.single;
+            }
+        }
+
+        function drawTarotSpread(spread, question) {
+            const cards = [];
+            const usedIndexes = new Set();
+            const numberOfCards = spread.name === "凯尔特十字牌阵" ? 10 : 
+                                 spread.name === "感情牌阵" ? 6 :
+                                 spread.name === "三张牌阵" ? 3 : 1;
+
+            for (let i = 0; i < numberOfCards; i++) {
+                let cardIndex;
+                do {
+                    cardIndex = Math.floor(Math.random() * TAROT_CARDS.major.length);
+                } while (usedIndexes.has(cardIndex));
+                
+                usedIndexes.add(cardIndex);
+                const isReversed = Math.random() < 0.5;
+                
+                cards.push({
+                    ...TAROT_CARDS.major[cardIndex],
+                    position: spread.positions ? spread.positions[i] : null,
+                    isReversed: isReversed,
+                    meaning: isReversed ? TAROT_CARDS.major[cardIndex].reversed : TAROT_CARDS.major[cardIndex].upright
+                });
+            }
+            
+            return cards;
+        }
+
+        function generateTarotReading(cards, spread, question) {
+            let reading = `根据你的问题："${question}"\n我为你选择了${spread.name}。\n\n`;
+            reading += `${spread.description}\n\n`;
+            
+            cards.forEach((card, index) => {
+                const position = card.position ? `【${card.position}】` : '';
+                const orientation = card.isReversed ? "逆位" : "正位";
+                reading += `${position}第${index + 1}张牌：${orientation}${card.name}\n`;
+                reading += `含义：${card.meaning}\n`;
+                
+                // 添加更多专业解读内容
+                if (card.name === "愚者") {
+                    reading += card.isReversed ? 
+                        "这可能暗示你在当前处境中过于谨慎或缺乏行动力。考虑是否因为恐惧而错过了机会。" : 
+                        "这张牌鼓励你保持开放的心态，准备迎接新的冒险和可能性。信任你的直觉和内在指引。";
+                } else if (card.name === "魔术师") {
+                    reading += card.isReversed ? 
+                        "你可能正在怀疑自己的能力，或未充分发挥你的才能。反思是什么阻碍了你的创造力和表达。" : 
+                        "你拥有实现目标所需的一切工具和资源。专注于你的意图，相信自己的能力去创造改变。";
+                }
+                // 可以为更多牌添加具体解读
+                
+                reading += "\n\n";
+            });
+            
+            // 添加牌与牌之间的联系解读
+            if (cards.length > 1) {
+                reading += "牌阵整体解读：\n";
+                reading += "通过观察这些牌之间的关系，我能感受到";
+                
+                // 根据牌面组合提供更深入的见解
+                const cardNames = cards.map(c => c.name).join("、");
+                if (cardNames.includes("愚者") && cardNames.includes("魔术师")) {
+                    reading += "一个转变的过程，从无知到掌握，从潜能到实现。这表明你正处于一个重要的学习和成长阶段。";
+                } else if (cardNames.includes("女祭司") && cardNames.includes("隐士")) {
+                    reading += "强烈的内省和自我发现的主题。这个时期适合深入探索你的内心世界和潜意识。";
+                } else {
+                    reading += "你正在经历的能量流动和转变。这些牌共同指引着你前进的方向和需要关注的领域。";
+                }
+                
+                reading += "\n\n";
+            }
+            
+            reading += `在当前的月相（残月）下，这个解读特别提醒你：${generateMoonPhaseAdvice(cards)}`;
+            
+            return reading;
+        }
+
+        function generateMoonPhaseAdvice(cards) {
+            // 根据残月特质和抽到的牌给出建议
+            const keywords = cards.map(card => card.isReversed ? card.reversed : card.upright).join('');
+            if (keywords.includes('结束') || keywords.includes('放下')) {
+                return "残月适合放下和释放，现在是完美的时机来结束那些不再服务于你的事物。";
+            } else if (keywords.includes('开始') || keywords.includes('新')) {
+                return "虽然残月通常不适合开始新事物，但可以利用这个时期做好准备，等待新月到来。";
+            } else {
+                return "残月是内省和净化的最佳时期，建议你多花时间倾听内心的声音。";
+            }
+        }
+
+        // 修改 sendMessageToAPI 函数
         async function sendMessageToAPI(message) {
             try {
-                // 获取已保存的用户信息
                 const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
                 
                 // 构建上下文信息
@@ -1703,12 +1909,12 @@
                     constellation: userInfo.constellation,
                     conversationHistory: conversationHistory.slice(-4) // 保留最近4条对话
                 };
-
-                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                
+                const response = await fetch(API_CONFIG.endpoint, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer sk-9868621019774f89a8b51339995428cc'
+                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
                     },
                     body: JSON.stringify({
                         model: 'deepseek-chat',
@@ -1724,11 +1930,11 @@
                         max_tokens: 150
                     })
                 });
-
+                
                 if (!response.ok) {
                     throw new Error(`API 请求失败: ${response.status}`);
                 }
-
+                
                 const data = await response.json();
                 return data.choices[0].message.content;
             } catch (error) {
@@ -2177,81 +2383,147 @@
             }
         }
 
-        async function generateDivinationResponse(message, mood, emotion) {
-            try {
-                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer YOUR_DEEPSEEK_API_KEY' // 需要替换为实际的API密钥
-                    },
-                    body: JSON.stringify({
-                        model: "deepseek-chat",
-                        messages: [
-                            {
-                                role: "system",
-                                content: `你是一个专业的占卜师，用户当前心情为${mood}，情绪状态为${emotion}。请根据用户的问题和情绪状态，给出富有诗意的占卜建议。回答要简短、温暖、富有希望。`
-                            },
-                            {
-                                role: "user",
-                                content: message
-                            }
-                        ],
-                        temperature: 0.8,
-                        max_tokens: 200
-                    })
-                });
-
-                const data = await response.json();
-                return data.choices[0].message.content;
-            } catch (error) {
-                console.error('占卜生成失败:', error);
-                return "抱歉，我现在无法为您占卜。请稍后再试。";
-            }
-        }
-
+        // 修改消息处理和显示流程
         async function handleUserMessage(message) {
-            // 添加用户消息到历史记录
-            conversationHistory.push({
-                role: "user",
-                content: message
+            // 添加用户消息到历史记录和UI
+            const currentTime = new Date().toLocaleTimeString('zh-CN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
             });
-
-            // 分析用户情绪
-            if (conversationHistory.length <= 4) {
-                const analysis = await analyzeUserMood(message);
-                if (analysis) {
-                    userMood = analysis.mood;
-                    userEmotion = analysis.emotion;
+            
+            // 显示用户消息
+            displayMessage(message, 'user', currentTime);
+            
+            // 添加到对话历史
+            conversationHistory.push({
+                role: 'user',
+                content: message,
+                timestamp: currentTime
+            });
+            
+            // 保存对话历史
+            saveConversationHistory();
+            
+            try {
+                // 检查是否是塔罗牌请求
+                const wantsTarot = message.includes('塔罗') || message.includes('占卜');
+                
+                if (wantsTarot) {
+                    // 显示"正在抽牌..."的临时消息
+                    const loadingMessageId = displayMessage('正在为你抽取塔罗牌...', 'ai', currentTime);
+                    
+                    // 选择合适的牌阵
+                    const spread = selectSpread(message);
+                    // 抽取塔罗牌
+                    const cards = drawTarotSpread(spread, message);
+                    // 生成解读
+                    const tarotReading = generateTarotReading(cards, spread, message);
+                    
+                    // 移除加载消息
+                    removeMessage(loadingMessageId);
+                    
+                    // 直接显示塔罗牌解读
+                    displayMessage(tarotReading, 'ai', currentTime);
+                    
+                    // 添加到对话历史
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: tarotReading,
+                        timestamp: currentTime
+                    });
+                    
+                    // 保存对话历史
+                    saveConversationHistory();
+                    
+                    // 获取额外的AI回应
+                    const aiResponse = await sendMessageToAPI(message);
+                    
+                    // 显示额外的AI回应
+                    displayMessage(aiResponse, 'ai', currentTime);
+                    
+                    // 添加到对话历史
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: aiResponse,
+                        timestamp: currentTime
+                    });
+                } else {
+                    // 普通消息处理
+                    const loadingMessageId = displayMessage('思考中...', 'ai', currentTime);
+                    const aiResponse = await sendMessageToAPI(message);
+                    
+                    // 移除加载消息
+                    removeMessage(loadingMessageId);
+                    
+                    // 显示AI回应
+                    displayMessage(aiResponse, 'ai', currentTime);
+                    
+                    // 添加到对话历史
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: aiResponse,
+                        timestamp: currentTime
+                    });
                 }
+                
+                // 保存对话历史
+                saveConversationHistory();
+            } catch (error) {
+                console.error('处理消息出错:', error);
+                displayMessage('抱歉，我遇到了一些问题。请稍后再试。', 'ai', currentTime);
             }
-
-            // 生成占卜回应
-            const response = await generateDivinationResponse(message, userMood, userEmotion);
-
-            // 添加AI回应到历史记录
-            conversationHistory.push({
-                role: "assistant",
-                content: response
-            });
-
-            // 更新对话显示
-            updateConversationDisplay();
         }
 
-        function updateConversationDisplay() {
-            const conversationDiv = document.getElementById('conversation');
-            conversationDiv.innerHTML = '';
+        // 显示消息的函数
+        function displayMessage(content, role, timestamp) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = `message ${role}-message`;
             
-            conversationHistory.forEach(msg => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'ai-message'}`;
-                messageDiv.textContent = msg.content;
-                conversationDiv.appendChild(messageDiv);
-            });
-
+            // 生成唯一ID
+            const messageId = 'msg-' + Date.now() + Math.floor(Math.random() * 1000);
+            messageContainer.id = messageId;
+            
+            // 添加时间戳
+            const timeElement = document.createElement('div');
+            timeElement.className = 'message-time';
+            timeElement.textContent = timestamp;
+            
+            // 添加内容
+            const contentElement = document.createElement('div');
+            contentElement.className = 'message-content';
+            contentElement.textContent = content;
+            
+            // 如果内容包含换行，使用适当的HTML
+            if (content.includes('\n')) {
+                contentElement.innerHTML = content.replace(/\n/g, '<br>');
+            }
+            
+            // 构建消息
+            messageContainer.appendChild(contentElement);
+            
+            // 根据角色决定时间戳位置
+            if (role === 'user') {
+                messageContainer.appendChild(timeElement);
+            } else {
+                messageContainer.prepend(timeElement);
+            }
+            
+            // 添加到对话区域
+            const conversationDiv = document.getElementById('conversation');
+            conversationDiv.appendChild(messageContainer);
+            
             // 滚动到底部
             conversationDiv.scrollTop = conversationDiv.scrollHeight;
+            
+            return messageId;
+        }
+
+        // 移除消息的函数
+        function removeMessage(messageId) {
+            const messageElement = document.getElementById(messageId);
+            if (messageElement) {
+                messageElement.remove();
+            }
         }
 
         // 修改发送消息的处理函数
@@ -2267,8 +2539,10 @@
 
         // 添加回车发送功能
         document.getElementById('message-input').addEventListener('keypress', async function(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 const message = this.value.trim();
+                
                 if (message) {
                     await handleUserMessage(message);
                     this.value = '';
