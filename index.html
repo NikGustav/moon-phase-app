@@ -1949,8 +1949,8 @@
             
             // 添加每张牌的图片和解释
             cards.forEach((card, index) => {
-                // 使用TarotAPI获取Base64图片
-                const imagePath = TarotAPI.getCardImagePath(card.name);
+                // 使用SVG备用图像，避免大型Base64
+                const imagePath = TarotAPI.getFallbackImage(card.name);
                 
                 reading += `
                     <div class="tarot-card ${card.isReversed ? 'reversed' : ''}">
@@ -2751,55 +2751,67 @@
                 // 检查TAROT_IMAGES是否存在（确保js/tarot-base64.js已加载）
                 if (typeof TAROT_IMAGES === 'undefined') {
                     console.error('TAROT_IMAGES未定义，请确保tarot-base64.js已正确加载');
-                    return '';
+                    return this.getFallbackImage(cardName);
                 }
                 
                 // 返回Base64编码的图片数据
                 if (TAROT_IMAGES[cardName]) {
                     return TAROT_IMAGES[cardName];
                 } else {
-                    console.warn(`未找到牌 "${cardName}" 的Base64数据，使用牌背代替`);
-                    return TAROT_IMAGES['牌背'] || '';
+                    console.warn(`未找到牌 "${cardName}" 的Base64数据，使用备用图像代替`);
+                    return this.getFallbackImage(cardName);
                 }
             },
             
-            // 显示单张塔罗牌
-            displaySingleCard: function(cardName) {
-                // 获取牌的含义
-                const cardIndex = Object.keys(this.cardMapping).indexOf(cardName);
-                let meaning = "暂无释义";
-                let reversedMeaning = "暂无逆位释义";
+            // 获取备用SVG图像，避免使用大型Base64数据
+            getFallbackImage: function(cardName) {
+                const colors = {
+                    "愚者": "#F9D649",
+                    "魔术师": "#7986CB",
+                    "女祭司": "#81C784",
+                    "女皇": "#E57373",
+                    "皇帝": "#FF8A65",
+                    "教皇": "#90A4AE",
+                    "恋人": "#F48FB1",
+                    "战车": "#9575CD",
+                    "力量": "#FFF176",
+                    "隐士": "#78909C",
+                    "命运之轮": "#4FC3F7",
+                    "正义": "#FFB74D",
+                    "倒吊人": "#BA68C8",
+                    "死神": "#212121",
+                    "节制": "#4DB6AC",
+                    "恶魔": "#EF5350",
+                    "塔": "#EF9A9A",
+                    "星星": "#B2DFDB",
+                    "月亮": "#E1F5FE",
+                    "太阳": "#FFCA28",
+                    "审判": "#B0BEC5",
+                    "世界": "#00897B"
+                };
                 
-                if (cardIndex >= 0 && cardIndex < TAROT_CARDS.major.length) {
-                    meaning = TAROT_CARDS.major[cardIndex].upright;
-                    reversedMeaning = TAROT_CARDS.major[cardIndex].reversed;
-                }
+                const color = colors[cardName] || "#455A64";
+                const nameDisplay = cardName || "未知牌";
                 
-                // 创建HTML
-                const html = `
-                    <div style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <h3 style="color: white; text-align: center;">${cardName}牌</h3>
-                        <div style="display: flex; justify-content: center;">
-                            <div style="width: 200px; margin: 10px; text-align: center;">
-                                <img src="${this.getCardImagePath(cardName)}" 
-                                     alt="${cardName}" 
-                                     style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
-                            </div>
+                // 创建SVG图像
+                return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="350" viewBox="0 0 200 350">
+                    <rect x="5" y="5" width="190" height="340" rx="10" fill="${color}" stroke="white" stroke-width="3"/>
+                    <rect x="15" y="15" width="170" height="320" rx="5" fill="black" fill-opacity="0.3"/>
+                    <text x="100" y="175" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" fill="white">${nameDisplay}</text>
+                </svg>`;
+            },
+            
+            // 使用简单的占位符代替图片
+            usePlainPlaceholder: function(cardName) {
+                return {
+                    type: 'placeholder',
+                    html: `<div style="width:200px; height:300px; background:#333; border-radius:10px; display:flex; justify-content:center; align-items:center; color:white; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,0.5);">
+                        <div>
+                            <div style="font-size:20px; margin-bottom:10px;">${cardName}牌</div>
+                            <div style="font-size:12px; opacity:0.7;">(图片已简化显示)</div>
                         </div>
-                        <div style="color: white; margin-top: 15px; text-align: center;">
-                            <p><strong>正位含义:</strong> ${meaning}</p>
-                            <p><strong>逆位含义:</strong> ${reversedMeaning}</p>
-                        </div>
-                    </div>
-                `;
-                
-                // 直接插入DOM
-                const div = document.createElement('div');
-                div.className = 'message ai-message';
-                div.innerHTML = html;
-                document.querySelector('.overlay-message-box').appendChild(div);
-                
-                return html;
+                    </div>`
+                };
             },
             
             // 调试函数
@@ -2880,7 +2892,63 @@
                 }, 100);
                 
                 return true;
-            }
+            },
+            
+            // 显示单张塔罗牌
+            displaySingleCard: function(cardName) {
+                // 获取牌的含义
+                const cardIndex = Object.keys(this.cardMapping).indexOf(cardName);
+                let meaning = "暂无释义";
+                let reversedMeaning = "暂无逆位释义";
+                
+                if (cardIndex >= 0 && cardIndex < TAROT_CARDS.major.length) {
+                    meaning = TAROT_CARDS.major[cardIndex].upright;
+                    reversedMeaning = TAROT_CARDS.major[cardIndex].reversed;
+                }
+                
+                // 使用SVG备用图像，避免加载大型Base64
+                const imageSrc = this.getFallbackImage(cardName);
+                console.log(`使用SVG图片替代 (${cardName})`);
+                
+                // 创建HTML
+                const html = `
+                    <div style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <h3 style="color: white; text-align: center;">${cardName}牌</h3>
+                        <div style="display: flex; justify-content: center;">
+                            <div style="width: 200px; margin: 10px; text-align: center;">
+                                <img src="${imageSrc}" 
+                                     alt="${cardName}" 
+                                     style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
+                            </div>
+                        </div>
+                        <div style="color: white; margin-top: 15px; text-align: center;">
+                            <p><strong>正位含义:</strong> ${meaning}</p>
+                            <p><strong>逆位含义:</strong> ${reversedMeaning}</p>
+                        </div>
+                    </div>
+                `;
+                
+                try {
+                    // 查找消息容器
+                    const messageContainer = document.querySelector('.overlay-message-box');
+                    if (!messageContainer) {
+                        console.error("找不到消息容器(.overlay-message-box)");
+                        throw new Error("找不到消息容器");
+                    }
+                    
+                    // 直接插入DOM
+                    const div = document.createElement('div');
+                    div.className = 'message ai-message';
+                    div.innerHTML = html;
+                    messageContainer.appendChild(div);
+                    console.log("塔罗牌HTML已添加到DOM");
+                    
+                    return html;
+                } catch (error) {
+                    console.error("添加塔罗牌到DOM时出错:", error);
+                    return html;
+                }
+            },
         };
         
         // 全局暴露调试函数
@@ -2950,32 +3018,64 @@
                     const cardName = singleCardMatch[3];
                     console.log("显示塔罗牌:", cardName);
                     
-                    // 显示单张塔罗牌
-                    const cardHTML = TarotAPI.displaySingleCard(cardName);
+                    // 添加直接调试消息
+                    console.log("正在执行单张塔罗牌显示...");
+                    console.log("TAROT_IMAGES是否已定义:", typeof TAROT_IMAGES !== 'undefined');
+                    console.log("overlay-message-box元素:", document.querySelector('.overlay-message-box'));
                     
-                    // 添加到对话历史
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: cardHTML,
-                        timestamp: currentTime
-                    });
+                    // 先检查TAROT_IMAGES是否已加载
+                    if (typeof TAROT_IMAGES === 'undefined') {
+                        console.error("错误：TAROT_IMAGES未定义，无法显示图片");
+                        const errorMsg = "无法加载塔罗牌图片数据，请刷新页面后重试。";
+                        displayMessage(errorMsg, 'ai', currentTime);
+                        return;
+                    }
+
+                    // 显示加载消息
+                    const loadingId = displayMessage("正在加载塔罗牌图片...", 'ai', currentTime);
                     
-                    // 保存对话历史
-                    saveConversationHistory();
-                    
-                    // 获取并显示额外的AI回应
-                    const aiResponse = await sendMessageToAPI(message);
-                    displayMessage(aiResponse, 'ai', currentTime);
-                    
-                    // 添加到对话历史
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: aiResponse,
-                        timestamp: currentTime
-                    });
-                    
-                    // 保存对话历史
-                    saveConversationHistory();
+                    try {
+                        // 显示单张塔罗牌
+                        const cardHTML = TarotAPI.displaySingleCard(cardName);
+                        console.log("已生成卡牌HTML:", cardHTML.substring(0, 100) + "...");
+                        
+                        // 移除加载消息
+                        removeMessage(loadingId);
+                        
+                        // 添加到对话历史
+                        conversationHistory.push({
+                            role: 'assistant',
+                            content: cardHTML,
+                            timestamp: currentTime
+                        });
+                        
+                        // 保存对话历史
+                        saveConversationHistory();
+                        
+                        // 显示简短的成功消息
+                        console.log("已成功添加塔罗牌到对话中");
+                        
+                        // 获取并显示额外的AI回应
+                        const aiResponse = await sendMessageToAPI(message);
+                        displayMessage(aiResponse, 'ai', currentTime);
+                        
+                        // 添加到对话历史
+                        conversationHistory.push({
+                            role: 'assistant',
+                            content: aiResponse,
+                            timestamp: currentTime
+                        });
+                        
+                        // 保存对话历史
+                        saveConversationHistory();
+                    } catch (error) {
+                        // 移除加载消息
+                        removeMessage(loadingId);
+                        
+                        // 显示错误
+                        console.error("显示塔罗牌时出错:", error);
+                        displayMessage("抱歉，显示塔罗牌时出现错误。", 'ai', currentTime);
+                    }
                     
                     return; // 结束处理
                 }
