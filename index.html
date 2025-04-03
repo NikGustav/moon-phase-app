@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夜间观察所 - 今夜下弦月</title>
+    <title>今夜下弦月</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- 引入Base64编码的塔罗牌图片数据 -->
+    <script src="js/tarot-base64.js"></script>
     <style>
         body {
             margin: 0;
@@ -1947,7 +1950,7 @@
             
             // 添加每张牌的图片和解释
             cards.forEach((card, index) => {
-                // 使用TarotAPI获取图片路径
+                // 使用TarotAPI获取Base64图片
                 const imagePath = TarotAPI.getCardImagePath(card.name);
                 
                 reading += `
@@ -2592,7 +2595,7 @@
                     displayMessage(aiResponse, 'ai', currentTime);
                     
                     // 添加到对话历史
-                    conversationHistory.push({
+            conversationHistory.push({
                         role: 'assistant',
                         content: aiResponse,
                         timestamp: currentTime
@@ -2709,8 +2712,8 @@
                     await handleUserMessage(message);
                     this.value = '';
                 }
-                    }
-                });
+            }
+        });
             } else {
                 console.error('找不到消息输入框元素');
             }
@@ -2744,9 +2747,21 @@
                 "世界": "21-the-world"
             },
             
-            // 获取卡牌图片路径
+            // 获取卡牌图片数据（使用Base64）
             getCardImagePath: function(cardName) {
-                return `images/tarot/major/${this.cardMapping[cardName] || "tarot-back"}.jpg`;
+                // 检查TAROT_IMAGES是否存在（确保js/tarot-base64.js已加载）
+                if (typeof TAROT_IMAGES === 'undefined') {
+                    console.error('TAROT_IMAGES未定义，请确保tarot-base64.js已正确加载');
+                    return '';
+                }
+                
+                // 返回Base64编码的图片数据
+                if (TAROT_IMAGES[cardName]) {
+                    return TAROT_IMAGES[cardName];
+                } else {
+                    console.warn(`未找到牌 "${cardName}" 的Base64数据，使用牌背代替`);
+                    return TAROT_IMAGES['牌背'] || '';
+                }
             },
             
             // 显示单张塔罗牌
@@ -2799,6 +2814,35 @@
         // 全局暴露调试函数
         window.debugTarot = function() {
             return TarotAPI.debug();
+        };
+
+        // 检查塔罗牌图片是否正确加载
+        window.checkTarotImages = function() {
+            console.log("检查塔罗牌图片是否已加载:");
+            
+            if (typeof TAROT_IMAGES === 'undefined') {
+                console.error('错误: TAROT_IMAGES未定义，tarot-base64.js可能未正确加载');
+                return false;
+            }
+            
+            console.log(`已加载 ${Object.keys(TAROT_IMAGES).length} 张塔罗牌图片`);
+            
+            // 检查几张关键牌
+            const testCards = ['愚者', '死神', '世界', '牌背'];
+            for (const card of testCards) {
+                if (TAROT_IMAGES[card]) {
+                    console.log(`✓ ${card}牌已加载，Base64长度: ${TAROT_IMAGES[card].length} 字符`);
+                    // 创建一个临时图片元素测试Base64数据
+                    const img = new Image();
+                    img.onload = () => console.log(`✓ ${card}牌图片可以正常显示 (${img.width}x${img.height})`);
+                    img.onerror = () => console.error(`✗ ${card}牌图片无法显示，可能Base64数据损坏`);
+                    img.src = TAROT_IMAGES[card];
+                } else {
+                    console.error(`✗ ${card}牌未找到`);
+                }
+            }
+            
+            return true;
         };
 
         // 修改 handleUserMessage 函数以支持单张塔罗牌查询
