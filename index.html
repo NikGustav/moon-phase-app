@@ -1276,17 +1276,17 @@
                 <div class="welcome-page">
                     <div class="moon-logo">
                         <svg viewBox="0 0 64 64">
-                            <path class="moon-stroke" d="
-                                M 32,4 
-                                A 28,28 0 0 1 32,60
-                                C 22,60 16,48 16,32
-                                C 16,16 22,4 32,4
-                            "/>
+                            <defs>
+                                <clipPath id="welcome-moon-clip">
+                                    <path d="M32,4 A28,28 0 0 1 32,60 C22,60 16,48 16,32 C16,16 22,4 32,4"/>
+                                </clipPath>
+                            </defs>
+                            <circle cx="32" cy="32" r="28" fill="#fff" clip-path="url(#welcome-moon-clip)"/>
                         </svg>
                     </div>
                     <div class="welcome-text">
-                        今晚是残月，<br>
-                        适合放下未完成的事物
+                        <div class="moon-phase"></div>
+                        <div>适合放下未完成的事物</div>
                     </div>
                     <button class="start-button" onclick="startApp()">
                         开启今夜
@@ -1347,15 +1347,18 @@
                     <div class="logo-header" style="display: flex; justify-content: center; align-items: center;">
                         <div class="moon-logo" style="width: 48px; height: 48px; margin: 0 12px 0 0;">
                             <svg viewBox="0 0 64 64">
-                                <path class="moon-stroke" d="
-                                    M 32,4 
-                                    A 28,28 0 0 1 32,60
-                                    C 22,60 16,48 16,32
-                                    C 16,16 22,4 32,4
-                                "/>
+                                <defs>
+                                    <clipPath id="home-moon-clip">
+                                        <path d="M32,4 A28,28 0 0 1 32,60 C22,60 16,48 16,32 C16,16 22,4 32,4"/>
+                                    </clipPath>
+                                </defs>
+                                <circle cx="32" cy="32" r="28" fill="#fff" clip-path="url(#home-moon-clip)"/>
                             </svg>
                         </div>
-                        <h1 style="margin: 0; font-size: 24px; font-weight: normal;">今夜残月</h1>
+                        <div>
+                            <h1 style="margin: 0; font-size: 24px; font-weight: normal;">今夜残月</h1>
+                            <div class="moon-phase" style="font-size: 14px; color: rgba(255,255,255,0.7);"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -1579,6 +1582,8 @@
         <div class="home-indicator"></div>
     </div>
 
+    <script src="js/tarot-base64.js"></script>
+    <script src="js/moonphase.js"></script>
     <script>
         // API 配置
         const API_CONFIG = {
@@ -2217,6 +2222,26 @@
                     this.value = '';
                 }
             }
+        });
+
+        // 确保在页面加载完成后立即更新月相
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建星空背景
+            createStars();
+            
+            // 立即更新月相信息
+            if (typeof updateMoonPhaseDisplay === 'function') {
+                updateMoonPhaseDisplay();
+            }
+            
+            // 每分钟更新一次月相信息
+            setInterval(function() {
+                if (typeof updateMoonPhaseDisplay === 'function') {
+                    updateMoonPhaseDisplay();
+                }
+            }, 60000);
+
+            // ... rest of the initialization code ...
         });
     </script>
 </body>
