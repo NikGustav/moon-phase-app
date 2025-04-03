@@ -2571,11 +2571,9 @@
                     // 移除加载消息
                     removeMessage(loadingMessageId);
                     
-                    // 显示塔罗牌解读
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message ai-message';
-                    messageDiv.innerHTML = tarotReading;
-                    document.querySelector('.overlay-message-box').appendChild(messageDiv);
+                    // 使用displayMessage函数显示塔罗牌解读
+                    const tarotReadingId = displayMessage(tarotReading, 'ai', currentTime, true);
+                    console.log("已显示塔罗牌阵HTML，消息ID:", tarotReadingId);
                     
                     // 添加到对话历史
                     conversationHistory.push({
@@ -2625,7 +2623,7 @@
         }
 
         // 显示消息的函数
-        function displayMessage(content, role, timestamp) {
+        function displayMessage(content, role, timestamp, isHtml = false) {
             const messageContainer = document.createElement('div');
             messageContainer.className = `message ${role}-message`;
             
@@ -2641,11 +2639,19 @@
             // 添加内容
             const contentElement = document.createElement('div');
             contentElement.className = 'message-content';
-            contentElement.textContent = content;
             
-            // 如果内容包含换行，使用适当的HTML
-            if (content.includes('\n')) {
-                contentElement.innerHTML = content.replace(/\n/g, '<br>');
+            // 根据内容类型选择如何处理
+            if (isHtml) {
+                // 使用innerHTML渲染HTML内容
+                contentElement.innerHTML = content;
+            } else {
+                // 处理纯文本内容
+                contentElement.textContent = content;
+                
+                // 如果内容包含换行，使用适当的HTML
+                if (content.includes('\n')) {
+                    contentElement.innerHTML = content.replace(/\n/g, '<br>');
+                }
             }
             
             // 构建消息
@@ -2658,13 +2664,13 @@
                 messageContainer.prepend(timeElement);
             }
             
-            // 添加到对话区域 - 修复这里的选择器
+            // 添加到对话区域
             const conversationDiv = document.querySelector('.overlay-message-box');
             if (conversationDiv) {
                 conversationDiv.appendChild(messageContainer);
 
-            // 滚动到底部
-            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+                // 滚动到底部
+                conversationDiv.scrollTop = conversationDiv.scrollHeight;
             } else {
                 console.error('找不到消息容器元素');
             }
@@ -2918,7 +2924,9 @@
                             <div style="width: 200px; margin: 10px; text-align: center;">
                                 <img src="${imageSrc}" 
                                      alt="${cardName}" 
-                                     style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
+                                     style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);"
+                                     onload="console.log('${cardName}牌图片加载成功')"
+                                     onerror="console.error('${cardName}牌图片加载失败')">
                             </div>
                         </div>
                         <div style="color: white; margin-top: 15px; text-align: center;">
@@ -2928,26 +2936,7 @@
                     </div>
                 `;
                 
-                try {
-                    // 查找消息容器
-                    const messageContainer = document.querySelector('.overlay-message-box');
-                    if (!messageContainer) {
-                        console.error("找不到消息容器(.overlay-message-box)");
-                        throw new Error("找不到消息容器");
-                    }
-                    
-                    // 直接插入DOM
-                    const div = document.createElement('div');
-                    div.className = 'message ai-message';
-                    div.innerHTML = html;
-                    messageContainer.appendChild(div);
-                    console.log("塔罗牌HTML已添加到DOM");
-                    
-                    return html;
-                } catch (error) {
-                    console.error("添加塔罗牌到DOM时出错:", error);
-                    return html;
-                }
+                return html; // 只返回HTML内容，让调用者决定如何显示
             },
         };
         
@@ -3042,6 +3031,10 @@
                         // 移除加载消息
                         removeMessage(loadingId);
                         
+                        // 直接显示塔罗牌HTML内容
+                        const tarotMessageId = displayMessage(cardHTML, 'ai', currentTime, true);
+                        console.log("已显示塔罗牌HTML，消息ID:", tarotMessageId);
+                        
                         // 添加到对话历史
                         conversationHistory.push({
                             role: 'assistant',
@@ -3097,11 +3090,9 @@
                     // 移除加载消息
                     removeMessage(loadingMessageId);
                     
-                    // 显示塔罗牌解读
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message ai-message';
-                    messageDiv.innerHTML = tarotReading;
-                    document.querySelector('.overlay-message-box').appendChild(messageDiv);
+                    // 使用displayMessage函数显示塔罗牌解读
+                    const tarotReadingId = displayMessage(tarotReading, 'ai', currentTime, true);
+                    console.log("已显示塔罗牌阵HTML，消息ID:", tarotReadingId);
                     
                     // 添加到对话历史
                     conversationHistory.push({
