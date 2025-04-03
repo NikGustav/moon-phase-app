@@ -2805,14 +2805,92 @@
             // 调试函数
             debug: function() {
                 console.log("执行塔罗牌调试函数");
+                
+                // 检查TAROT_IMAGES是否已加载
+                if (typeof TAROT_IMAGES === 'undefined') {
+                    console.error('错误: TAROT_IMAGES未定义，tarot-base64.js可能未正确加载');
+                    alert('错误：塔罗牌图片数据未加载，请检查控制台');
+                    return "错误：塔罗牌图片数据未加载";
+                }
+                
+                // 显示测试图片
                 this.displaySingleCard("愚者");
-                return "塔罗牌调试函数已执行，请查看是否显示图片";
+                console.log("塔罗牌调试函数已执行完毕，已显示愚者牌");
+                return "塔罗牌调试函数已执行完毕，已显示愚者牌";
+            },
+            
+            // 添加新的可视化调试函数
+            visualDebug: function() {
+                console.log("开始可视化调试...");
+                
+                // 检查TAROT_IMAGES是否已加载
+                if (typeof TAROT_IMAGES === 'undefined') {
+                    const errorMsg = '错误: TAROT_IMAGES未定义，tarot-base64.js可能未正确加载';
+                    console.error(errorMsg);
+                    alert(errorMsg);
+                    return false;
+                }
+                
+                // 创建调试界面
+                const debugDiv = document.createElement('div');
+                debugDiv.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.95);
+                    z-index: 9999;
+                    padding: 20px;
+                    box-sizing: border-box;
+                    overflow: auto;
+                    color: white;
+                    font-family: monospace;
+                `;
+                
+                // 添加标题和说明
+                let debugContent = `
+                    <div style="text-align:center; margin-bottom:20px;">
+                        <h2>塔罗牌图片调试面板</h2>
+                        <p>已加载 ${Object.keys(TAROT_IMAGES).length} 张塔罗牌图片</p>
+                        <button id="closeDebug" style="padding:5px 10px; margin-top:10px; cursor:pointer;">关闭调试</button>
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
+                `;
+                
+                // 添加卡牌预览
+                for (const [cardName, imgData] of Object.entries(TAROT_IMAGES)) {
+                    debugContent += `
+                        <div style="width:120px; margin:5px; text-align:center; background:rgba(255,255,255,0.1); border-radius:5px; padding:10px;">
+                            <img src="${imgData}" alt="${cardName}" style="width:100%; border-radius:5px;">
+                            <p style="margin:5px 0; font-size:12px;">${cardName}</p>
+                        </div>
+                    `;
+                }
+                
+                debugContent += `</div>`;
+                debugDiv.innerHTML = debugContent;
+                document.body.appendChild(debugDiv);
+                
+                // 添加关闭按钮事件
+                setTimeout(() => {
+                    document.getElementById('closeDebug').addEventListener('click', function() {
+                        document.body.removeChild(debugDiv);
+                    });
+                }, 100);
+                
+                return true;
             }
         };
         
         // 全局暴露调试函数
         window.debugTarot = function() {
             return TarotAPI.debug();
+        };
+        
+        // 添加可视化调试函数
+        window.visualDebugTarot = function() {
+            return TarotAPI.visualDebug();
         };
 
         // 检查塔罗牌图片是否正确加载
@@ -2971,6 +3049,15 @@
             }
         }
     </script>
+    
+    <!-- 添加调试按钮 -->
+    <div id="debug-panel" style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; text-align: right;">
+        <button onclick="visualDebugTarot()" style="background: rgba(0,0,0,0.7); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-bottom: 5px; font-size: 12px;">
+            调试塔罗牌图片
+        </button>
+        <button onclick="(function(){document.getElementById('debug-panel').style.display='none';})()" style="background: rgba(0,0,0,0.7); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">
+            隐藏按钮
+        </button>
+    </div>
 </body>
-</html> 
 </html> 
