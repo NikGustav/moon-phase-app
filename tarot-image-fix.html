@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔罗牌图片修复工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #1a73e8;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #3c4043;
+            margin-top: 25px;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            color: #d14;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #174ea6;
+        }
+        .steps {
+            margin-left: 20px;
+        }
+        .steps li {
+            margin-bottom: 15px;
+        }
+        .solution {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>塔罗牌图片修复工具</h1>
+    
+    <div class="warning">
+        <strong>检测到问题:</strong> 您的塔罗牌图片无法正确显示，因为 <code>js/tarot-base64.js</code> 文件格式不正确。
+    </div>
+
+    <h2>问题说明</h2>
+    <p>
+        经过检查，我发现您的 <code>js/tarot-base64.js</code> 文件包含了塔罗牌的图片数据，但它没有按照正确的 JavaScript 格式进行定义，
+        所以 <code>TAROT_IMAGES</code> 变量没有被正确创建，导致代码无法读取到图片数据。
+    </p>
+
+    <h2>解决方案</h2>
+    <p>
+        我已经创建了两个文件来帮助您解决这个问题：
+    </p>
+    <ul>
+        <li><code>js/tarot-base64-fixed.js</code> - 包含正确格式的框架，但只有占位图片数据</li>
+        <li><code>tarot-image-fix.html</code> - 本页面，帮助您完成修复</li>
+    </ul>
+
+    <div class="solution">
+        <h3>修复步骤</h3>
+        <ol class="steps">
+            <li>
+                <strong>Step 1:</strong> 将您原始的 <code>js/tarot-base64.js</code> 文件内容包装在正确的 JavaScript 格式中。
+                <pre><code>// 塔罗牌图片的Base64数据
+const TAROT_IMAGES = {
+    "愚者": "data:image/jpeg;base64,这里粘贴愚者牌的base64数据",
+    "魔术师": "data:image/jpeg;base64,这里粘贴魔术师牌的base64数据",
+    ...
+    "世界": "data:image/jpeg;base64,这里粘贴世界牌的base64数据"
+};</code></pre>
+            </li>
+            <li>
+                <strong>Step 2:</strong> 将这个正确格式的内容保存到 <code>js/tarot-base64.js</code> 文件中，
+                或者继续使用我已创建的 <code>js/tarot-base64-fixed.js</code> 文件（需要将您的实际数据添加进去）。
+            </li>
+            <li>
+                <strong>Step 3:</strong> 确保 <code>index.html</code> 中引用了正确的文件：
+                <pre><code>&lt;script src="js/tarot-base64.js"&gt;&lt;/script&gt;</code></pre>
+                或
+                <pre><code>&lt;script src="js/tarot-base64-fixed.js"&gt;&lt;/script&gt;</code></pre>
+            </li>
+        </ol>
+    </div>
+
+    <h2>如何获取正确格式的图片数据？</h2>
+    <p>
+        如果您有塔罗牌的JPEG或PNG图片文件，您可以：
+    </p>
+    <ol class="steps">
+        <li>使用在线工具将图片转换为Base64编码（例如 <a href="https://www.base64-image.de/" target="_blank">https://www.base64-image.de/</a>）</li>
+        <li>为每张牌创建一个格式为 <code>"牌名": "data:image/jpeg;base64,转换后的Base64数据"</code> 的条目</li>
+        <li>将所有条目放在 <code>const TAROT_IMAGES = { ... }</code> 中</li>
+    </ol>
+
+    <h2>快速检测工具</h2>
+    <p>点击下面的按钮检测您当前的 <code>TAROT_IMAGES</code> 变量是否已正确定义：</p>
+    
+    <button onclick="checkTarotImages()">检测 TAROT_IMAGES 变量</button>
+    <pre id="result">点击按钮检测...</pre>
+
+    <script>
+        function checkTarotImages() {
+            const resultElement = document.getElementById('result');
+            
+            if (typeof TAROT_IMAGES === 'undefined') {
+                resultElement.textContent = '❌ TAROT_IMAGES 变量未定义。这表明您的 tarot-base64.js 文件未正确加载或格式不正确。';
+                resultElement.style.color = '#dc3545';
+            } else {
+                const keys = Object.keys(TAROT_IMAGES);
+                resultElement.textContent = '✅ TAROT_IMAGES 变量已成功定义！\n' +
+                    `包含的牌数量: ${keys.length}\n` +
+                    `包含的牌名: ${keys.join(', ')}`;
+                resultElement.style.color = '#28a745';
+            }
+        }
+    </script>
+</body>
+</html> 

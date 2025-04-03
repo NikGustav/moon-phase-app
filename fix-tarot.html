@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔罗牌数据修复工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .step {
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .step h2 {
+            color: #2196F3;
+            margin-top: 0;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        #log {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .error {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>塔罗牌数据修复工具</h1>
+        
+        <div class="step">
+            <h2>步骤 1: 加载原始数据</h2>
+            <p>请选择原始的 tarot-base64.js 文件：</p>
+            <input type="file" id="fileInput" accept=".js">
+        </div>
+        
+        <div class="step">
+            <h2>步骤 2: 修复数据</h2>
+            <p>点击下面的按钮开始修复数据：</p>
+            <button onclick="fixTarotData()">开始修复</button>
+        </div>
+        
+        <div id="log">等待开始...</div>
+    </div>
+
+    <script src="js/fix-tarot-data.js"></script>
+    <script>
+        const log = document.getElementById('log');
+        
+        function appendLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = type;
+            line.textContent = `[${timestamp}] ${message}`;
+            log.appendChild(line);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function fixTarotData() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                appendLog('请先选择文件', 'error');
+                return;
+            }
+            
+            appendLog('开始读取文件...');
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                appendLog('文件读取完成');
+                
+                try {
+                    // 执行文件内容，使TAROT_IMAGES变量可用
+                    const script = document.createElement('script');
+                    script.textContent = e.target.result;
+                    document.body.appendChild(script);
+                    
+                    // 触发修复脚本
+                    const event = new Event('DOMContentLoaded');
+                    document.dispatchEvent(event);
+                    
+                    appendLog('数据修复完成', 'success');
+                } catch (error) {
+                    appendLog(`错误: ${error.message}`, 'error');
+                }
+            };
+            
+            reader.onerror = function() {
+                appendLog('文件读取失败', 'error');
+            };
+            
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html> 

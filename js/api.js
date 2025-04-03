@@ -86,21 +86,4 @@ function getMoonPhase() {
 }
 
 // 分析图片
-async function analyzeImage(file) {
-    try {
-        console.log('Starting image analysis for file:', file.name);
-        const imagePrompt = `我上传了一张图片，请根据图片内容，以占星师的视角给出温暖的回应。图片内容：${file.name}`;
-        const response = await sendMessageToAPI(imagePrompt);
-        
-        return {
-            success: true,
-            description: response
-        };
-    } catch (error) {
-        console.error('Error analyzing image:', error);
-        return {
-            success: false,
-            error: '图片分析失败，请重试'
-        };
-    }
-} 
+// 移除图片分析功能 

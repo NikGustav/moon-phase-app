@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今夜下弦月</title>
-    <!-- 引入Base64编码的塔罗牌图片数据 -->
-    <script src="js/tarot-base64.js"></script>
+    <title>夜间观察所 - 今夜下弦月</title>
     <style>
         body {
             margin: 0;
@@ -202,15 +200,12 @@
             font-family: inherit;
             padding: 12px;
             border-radius: 8px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
-            transition: all 0.3s ease;
             text-align: center;
             box-sizing: border-box;
             caret-color: transparent;
             cursor: default;
             background: rgba(255, 255, 255, 0.03);
-            border: none;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            outline: none;
         }
 
         .message-input::placeholder {
@@ -222,9 +217,9 @@
 
         .message-input:focus {
             outline: none;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: none;
+            box-shadow: none;
+            background: rgba(255, 255, 255, 0.03);
         }
 
         .send-button {
@@ -729,13 +724,15 @@
             position: relative;
             margin-top: auto;
             width: 100%;
-            background: transparent;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             padding: 8px;
             box-sizing: border-box;
             display: flex;
             gap: 8px;
             align-items: center;
+            border: none;
+            outline: none;
         }
 
         .overlay-input {
@@ -756,11 +753,8 @@
 
         .overlay-input:focus {
             outline: none;
-            background: transparent;
-        }
-
-        .overlay-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+            border: none;
+            box-shadow: none;
         }
 
         .overlay-send {
@@ -1269,59 +1263,6 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-
-        .tarot-spread-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .tarot-card {
-            position: relative;
-            width: 150px;
-            height: 260px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .tarot-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .tarot-card.reversed img {
-            transform: rotate(180deg);
-        }
-
-        .card-name {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .card-position {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px;
-            text-align: center;
-            font-size: 12px;
-        }
     </style>
 </head>
 <body>
@@ -1416,7 +1357,7 @@
                         </div>
                         <h1 style="margin: 0; font-size: 24px; font-weight: normal;">今夜残月</h1>
                     </div>
-            </div>
+                </div>
 
                 <div class="message-box" style="text-align: center;">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff;">
@@ -1646,30 +1587,25 @@
         };
 
         // 构建系统提示
-        const SYSTEM_PROMPT = `你是一位经验丰富、专业且温暖的塔罗占卜师，擅长倾听与理解。
+        const SYSTEM_PROMPT = `你是一位温柔博学的女性西方玄学家，精通月相、占星、星座、塔罗牌和卢恩文字等神秘学知识。
 
-情绪回应原则（必须严格遵循）：
-1. 简短回应：对"我很难过"、"我沮丧"等情绪，回应不超过1-2句话
-2. 先支持再询问：首先表达理解和共情，然后简单询问原因，不提供解决方案
-3. 不急于塔罗：首次回应情绪时绝对不要提到塔罗牌，必须在用户至少分享2-3次后才可提及
-4. 一次一步：每次回应专注于一个目标，不同时进行情感支持和塔罗引导
+        对话要求：
+        1. 每次回复要包含对用户情绪的理解和一个引导性问题
+        2. 回答要简短自然，控制在2-3句话以内
+        3. 要基于当前的月相（残月）特质来引导对话
+        4. 适时提供占卜或解读建议，但不要过于直接
+        5. 记住用户之前提到的话题，在后续对话中自然引用
+        6. 遇到负面情绪时，先共情后引导
+        7. 不要问已知的个人信息（如生日、星座等）
 
-情绪回应示例（必须保持简短）：
-- 用户："我有些沮丧" → 回应："我能感受到你的沮丧。愿意分享是什么让你有这种感受吗？"
-- 用户："我很难过" → 回应："这种难过的感受我能理解。最近发生了什么事吗？"
-- 用户："感觉很乱" → 回应："内心的混乱确实不好受。想谈谈是什么让你感到困扰吗？"
+        示例回复：
+        - "我能感受到你内心的迷茫。在这个残月时节，不妨和我说说，最近有什么特别困扰你的事情吗？"
+        - "你说得对。这种感觉就像月亮逐渐隐去的光芒，让人有些不安。要不要抽一张塔罗牌，看看事情的另一面？"
+        - "这个想法很有趣。不知道你平时会用什么方式来缓解这种情绪呢？"
 
-塔罗引导时机：
-- 仅在用户情绪稳定且已分享内容后（通常是第3-4轮对话）
-- 用户明确表示想要塔罗解读时
-- 引导方式要自然："如果你想，我们可以通过塔罗牌来探索这个问题。"
-
-塔罗牌占卜流程（在正确时机后执行）：
-1. 询问具体问题："你希望通过塔罗牌了解哪个方面呢？"
-2. 介绍适合的牌阵（每次只提供2种选择）
-3. 引导用户选择或根据问题推荐合适的牌阵
-4. 描述抽牌过程后再解读每张牌的含义
-5. 提供开放性的整体解读`;
+        当前月相：残月
+        特质：适合放下、内省、净化和重新定位
+        能量：适合探索内在世界，倾听内心声音`;
 
         // 对话历史记录
         let conversationHistory = [];
@@ -1698,358 +1634,10 @@
             localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
         }
 
-        // 塔罗牌数据
-        const TAROT_CARDS = {
-            major: [
-                { name: "愚者", upright: "新的开始、冒险、自发性", reversed: "鲁莽、不负责任、过度冒险" },
-                { name: "魔术师", upright: "创造力、技能、意志力", reversed: "操纵、欺骗、未开发的才能" },
-                { name: "女祭司", upright: "直觉、神秘、内在知识", reversed: "隐藏的动机、表面信息" },
-                { name: "女皇", upright: "丰饶、母性、自然", reversed: "依赖、过度保护、创造力受阻" },
-                { name: "皇帝", upright: "权威、结构、控制", reversed: "专制、僵化、过度控制" },
-                { name: "教皇", upright: "传统、信仰、建议", reversed: "反叛、不信任、个人信仰" },
-                { name: "恋人", upright: "爱情、和谐、选择", reversed: "不和谐、冲突、错误选择" },
-                { name: "战车", upright: "决心、意志、成功", reversed: "失控、攻击性、障碍" },
-                { name: "力量", upright: "勇气、耐心、控制", reversed: "软弱、缺乏信心、自我怀疑" },
-                { name: "隐士", upright: "内省、寻找、指导", reversed: "孤独、隔离、迷失" },
-                { name: "命运之轮", upright: "变化、周期、命运", reversed: "外部控制、坏运气、阻力" },
-                { name: "正义", upright: "公正、真理、因果", reversed: "不公、不诚实、不平衡" },
-                { name: "倒吊人", upright: "牺牲、新视角、暂停", reversed: "无用的牺牲、停滞" },
-                { name: "死神", upright: "结束、变化、转变", reversed: "抗拒改变、停滞、衰退" },
-                { name: "节制", upright: "平衡、适度、耐心", reversed: "不平衡、过度、缺乏远见" },
-                { name: "恶魔", upright: "束缚、物质主义、欲望", reversed: "释放、克服诱惑、觉醒" },
-                { name: "塔", upright: "突变、混乱、启示", reversed: "避免灾难、恐惧改变" },
-                { name: "星星", upright: "希望、信心、目的", reversed: "绝望、失去信心、沮丧" },
-                { name: "月亮", upright: "直觉、幻想、恐惧", reversed: "释放恐惧、误解、混乱" },
-                { name: "太阳", upright: "快乐、活力、成功", reversed: "过度乐观、暂时性抑郁" },
-                { name: "审判", upright: "重生、内在召唤、觉醒", reversed: "自我怀疑、拒绝改变" },
-                { name: "世界", upright: "完成、整合、成就", reversed: "未完成、缺乏收尾" }
-            ]
-        };
-
-        // 塔罗牌完整知识库
-        const TAROT_KNOWLEDGE = {
-            history: {
-                origin: "塔罗牌起源于15世纪的意大利，最初是一种纸牌游戏。后来在18世纪末被神秘学家赋予了占卜和预言的功能。",
-                evolution: "现代最广为人知的韦特塔罗牌(Rider-Waite Tarot)由亚瑟·爱德华·韦特和帕米拉·科尔曼·史密斯于1909年创作。",
-                significance: "塔罗牌不仅是占卜工具，更是一面反映人生旅程、心理状态和潜意识的镜子。"
-            },
-            
-            spreads: {
-                single: {
-                    name: "单张牌阵",
-                    description: "最简单的牌阵，适合日常指引或简单问题",
-                    questions: ["今天的建议", "事情的关键", "需要注意什么"],
-                    interpretation: "单张牌的解读需要结合问题背景，重点关注牌面主要含义"
-                },
-                threeCard: {
-                    name: "三张牌阵",
-                    description: "最常用的基础牌阵，可以解读过去、现在、未来，或问题的原因、现状、建议",
-                    positions: [
-                        "过去/原因 - 导致当前情况的过去事件或根本原因",
-                        "现在/现状 - 当前所处的情况和面临的挑战",
-                        "未来/建议 - 未来的走向或解决问题的建议"
-                    ],
-                    questions: ["事业发展", "感情走向", "人际关系"],
-                    interpretation: "三张牌之间存在联系，需要整体解读"
-                },
-                celtic: {
-                    name: "凯尔特十字牌阵",
-                    description: "最完整的传统牌阵，适合深入分析复杂问题",
-                    positions: [
-                        "当前处境",
-                        "面临的挑战",
-                        "遥远的过去",
-                        "近期过去",
-                        "可能的结果",
-                        "近期未来",
-                        "自身态度",
-                        "外部环境",
-                        "希望或恐惧",
-                        "最终结果"
-                    ],
-                    questions: ["人生重大抉择", "复杂的感情问题", "事业规划"],
-                    interpretation: "需要综合考虑所有牌位的关系，是最全面的分析方式"
-                },
-                relationship: {
-                    name: "感情牌阵",
-                    description: "专门用于分析感情问题的六张牌阵",
-                    positions: [
-                        "自己的态度",
-                        "对方的态度",
-                        "关系的现状",
-                        "有利因素",
-                        "不利因素",
-                        "关系的发展"
-                    ],
-                    interpretation: "重点分析双方的互动和关系发展"
-                }
-            },
-
-            majorArcana: {
-                "0": {
-                    name: "愚者",
-                    upright: {
-                        keywords: ["新开始", "冒险", "自发性", "纯真", "自由"],
-                        description: "代表纯真无邪的开始，对未知充满信心，敢于冒险",
-                        career: "适合尝试新的职业方向，开创自己的事业",
-                        love: "新的感情可能，或对感情保持天真浪漫的态度",
-                        advice: "保持开放和好奇的心态，不要害怕犯错"
-                    },
-                    reversed: {
-                        keywords: ["鲁莽", "不负责任", "过度冒险", "愚昧"],
-                        description: "可能做出不理智的决定，或过于天真",
-                        career: "需要更谨慎的规划，避免冲动的决定",
-                        love: "不要过于理想化感情，需要务实的态度",
-                        advice: "在冒险前需要做好充分准备"
-                    }
-                },
-                // ... 其他大阿卡纳牌的详细信息 ...
-            },
-
-            readingGuidelines: {
-                preparation: {
-                    environment: "选择安静、舒适的环境，保持心境平和",
-                    focus: "集中注意力，清晰表达想要解答的问题",
-                    shuffling: "认真洗牌，同时思考你的问题"
-                },
-                interpretation: {
-                    basics: [
-                        "考虑牌面的基本含义",
-                        "结合牌阵位置的特定含义",
-                        "注意牌与牌之间的关系",
-                        "考虑问题的具体背景"
-                    ],
-                    factors: [
-                        "牌面朝向（正位/逆位）",
-                        "牌阵中的位置",
-                        "与其他牌的关系",
-                        "直觉感受"
-                    ]
-                }
-            },
-
-            // 塔罗师专业知识
-            professionalSkills: {
-                knowledge: {
-                    cardMeaning: "深入理解每张塔罗牌（大阿卡纳和小阿卡纳）的象征意义、图像元素、传统解释以及可能的不同解读。掌握正位和逆位的含义差异。",
-                    deckStructure: "熟悉塔罗牌的历史、起源和不同牌组（如伟特塔罗、透特塔罗等）的特点。了解小阿卡纳的四元素（权杖、星币、圣杯、宝剑）及其代表的领域。",
-                    spreadApplications: "熟练掌握各种常用牌阵（如凯尔特十字牌阵、时间之轮牌阵等）及其适用情境。能够根据不同的问题和需求，灵活选择或设计合适的牌阵。"
-                },
-                intuition: {
-                    intuitiveAbility: "培养敏锐的直觉，能够感知牌面背后的深层含义和能量流动。学会倾听内心的声音，将直觉融入解读中。",
-                    associationSkills: "能够将不同的牌面、牌位和问题情境联系起来，形成连贯的解读。善于运用象征、隐喻和故事，将抽象的牌面转化为易于理解的信息。",
-                    psychologyKnowledge: "了解基本的心理学概念，能够理解人类的情绪、动机和行为模式。运用心理学知识，帮助求问者更好地理解自己的内心世界和问题本质。"
-                },
-                communication: {
-                    listeningSkills: "耐心倾听求问者的叙述，捕捉关键信息和情感。营造安全、信任的氛围，让求问者愿意敞开心扉。",
-                    expressionSkills: "清晰、准确地表达牌面信息和解读结果。运用富有同理心的语言，给予求问者支持和鼓励。",
-                    consultingEthics: "尊重求问者的隐私和意愿，遵守保密原则。保持客观、中立的态度，避免主观臆断和误导。不利用占卜结果操控他人。"
-                },
-                continuousImprovement: {
-                    continuousLearning: "阅读塔罗相关的书籍、文章和资料，不断拓展知识面。参加塔罗课程、工作坊和交流活动，与其他塔罗师交流学习。",
-                    practicalExperience: "通过大量的实际案例，积累解读经验，提升解读水平。反思和总结每次解读，不断优化自己的解读方法和技巧。",
-                    selfImprovement: "通过冥想，或其他方式，提升自我感知力，和精神力。保持开放的心态，接受不同的观点和解读方式。"
-                },
-                philosophy: "塔罗牌是一种工具，用于探索和反思，而非预测未来。优秀的塔罗师应以负责任的态度，帮助求问者更好地认识自己，做出更明智的选择。"
-            },
-        };
-
-        // 修改抽牌和解读系统
-        function selectSpread(question) {
-            // 根据问题类型推荐合适的牌阵
-            if (question.includes('感情') || question.includes('恋爱') || question.includes('关系')) {
-                return TAROT_KNOWLEDGE.spreads.relationship;
-            } else if (question.includes('事业') || question.includes('工作') || question.includes('学习')) {
-                return TAROT_KNOWLEDGE.spreads.threeCard;
-            } else if (question.includes('人生') || question.includes('重大')) {
-                return TAROT_KNOWLEDGE.spreads.celtic;
-            } else {
-                return TAROT_KNOWLEDGE.spreads.single;
-            }
-        }
-
-        function drawTarotSpread(spreadType, question) {
-            const cards = [];
-            
-            // 根据牌阵类型决定抽取的牌数
-            let numCards;
-            switch(spreadType) {
-                case '三张牌阵':
-                    numCards = 3;
-                    break;
-                case '凯尔特十字牌阵':
-                    numCards = 10;
-                    break;
-                case '感情牌阵':
-                    numCards = 5;
-                    break;
-                default:
-                    numCards = 3;
-            }
-            
-            // 抽取指定数量的牌
-            const usedIndices = new Set();
-            
-            for (let i = 0; i < numCards; i++) {
-                let cardIndex;
-                do {
-                    cardIndex = Math.floor(Math.random() * TAROT_CARDS.major.length);
-                } while (usedIndices.has(cardIndex));
-                
-                usedIndices.add(cardIndex);
-                const card = TAROT_CARDS.major[cardIndex];
-                
-                // 随机决定正逆位
-                const isReversed = Math.random() < 0.5;
-                
-                // 获取牌的位置说明
-                const position = getCardPosition(i, spreadType);
-                
-                cards.push({
-                    name: card.name,
-                    meaning: isReversed ? card.reversedMeaning : card.meaning,
-                    isReversed: isReversed,
-                    position: position,
-                    number: cardIndex // 添加卡牌编号用于构建图片路径
-                });
-            }
-            
-            return cards;
-        }
-
-        // 获取牌的位置说明
-        function getCardPosition(index, spreadType) {
-            switch(spreadType) {
-                case '三张牌阵':
-                    const positions = ['过去/原因', '现在/现状', '未来/建议'];
-                    return positions[index] || `位置${index + 1}`;
-                case '感情牌阵':
-                    const lovePositions = ['自己的态度', '对方的态度', '关系的现状', '有利因素', '不利因素', '关系的发展'];
-                    return lovePositions[index] || `位置${index + 1}`;
-                case '凯尔特十字牌阵':
-                    const celticPositions = [
-                        '当前处境', '面临的挑战', '遥远的过去', '近期过去',
-                        '可能的结果', '近期未来', '自身态度', '外部环境',
-                        '希望或恐惧', '最终结果'
-                    ];
-                    return celticPositions[index] || `位置${index + 1}`;
-                default:
-                    return `位置${index + 1}`;
-            }
-        }
-
-        function generateTarotReading(cards, spreadType, question) {
-            let reading = `<div class="tarot-reading">
-                <div class="reading-header">
-                    <h3>塔罗牌阅读</h3>
-                    <p class="spread-type">${spreadType}</p>
-                    ${question ? `<p class="question">你的问题：${question}</p>` : ''}
-                </div>
-                <div class="tarot-spread-container">`;
-            
-            // 添加每张牌的图片和解释
-            cards.forEach((card, index) => {
-                // 使用SVG备用图像，避免大型Base64
-                const imagePath = TarotAPI.getFallbackImage(card.name);
-                
-                reading += `
-                    <div class="tarot-card ${card.isReversed ? 'reversed' : ''}">
-                        <div class="card-image-container">
-                            <img src="${imagePath}" 
-                                 alt="${card.name}" 
-                                 class="card-image">
-                            <div class="card-overlay">
-                                <div class="card-name">${card.name}</div>
-                                <div class="card-position">${card.position}</div>
-                            </div>
-                        </div>
-                        <div class="card-meaning">
-                            <p>${card.isReversed ? '逆位' : '正位'}: ${card.meaning}</p>
-                        </div>
-                    </div>`;
-            });
-            
-            reading += `</div>
-                <style>
-                    .tarot-reading {
-                        background: rgba(0, 0, 0, 0.8);
-                        padding: 20px;
-                        border-radius: 10px;
-                        margin: 20px 0;
-                    }
-                    .reading-header {
-                        text-align: center;
-                        margin-bottom: 20px;
-                    }
-                    .tarot-spread-container {
-                        display: flex;
-                        flex-wrap: wrap;
-                        justify-content: center;
-                        gap: 20px;
-                        margin: 20px 0;
-                    }
-                    .tarot-card {
-                        width: 200px;
-                        margin: 10px;
-                        text-align: center;
-                    }
-                    .card-image-container {
-                        position: relative;
-                        margin-bottom: 10px;
-                    }
-                    .card-image {
-                        width: 100%;
-                        height: auto;
-                        border-radius: 10px;
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-                    }
-                    .reversed .card-image {
-                        transform: rotate(180deg);
-                    }
-                    .card-overlay {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        background: rgba(0, 0, 0, 0.7);
-                        padding: 10px;
-                        border-bottom-left-radius: 10px;
-                        border-bottom-right-radius: 10px;
-                    }
-                    .card-name {
-                        font-weight: bold;
-                        color: white;
-                    }
-                    .card-position {
-                        color: #ddd;
-                        font-size: 0.9em;
-                    }
-                    .card-meaning {
-                        margin-top: 10px;
-                        font-size: 0.9em;
-                        color: #eee;
-                    }
-                </style>
-            </div>`;
-            
-            return reading;
-        }
-
-        function generateMoonPhaseAdvice(cards) {
-            // 根据残月特质和抽到的牌给出建议
-            const keywords = cards.map(card => card.isReversed ? card.reversed : card.upright).join('');
-            if (keywords.includes('结束') || keywords.includes('放下')) {
-                return "残月适合放下和释放，现在是完美的时机来结束那些不再服务于你的事物。";
-            } else if (keywords.includes('开始') || keywords.includes('新')) {
-                return "虽然残月通常不适合开始新事物，但可以利用这个时期做好准备，等待新月到来。";
-                    } else {
-                return "残月是内省和净化的最佳时期，建议你多花时间倾听内心的声音。";
-            }
-        }
-
-        // 修改 sendMessageToAPI 函数
+        // 发送消息到 API
         async function sendMessageToAPI(message) {
             try {
+                // 获取已保存的用户信息
                 const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
                 
                 // 构建上下文信息
@@ -2058,12 +1646,12 @@
                     constellation: userInfo.constellation,
                     conversationHistory: conversationHistory.slice(-4) // 保留最近4条对话
                 };
-                
-                const response = await fetch(API_CONFIG.endpoint, {
+
+                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                        'Authorization': 'Bearer sk-9868621019774f89a8b51339995428cc'
                     },
                     body: JSON.stringify({
                         model: 'deepseek-chat',
@@ -2532,623 +2120,104 @@
             }
         }
 
-        // 修改消息处理和显示流程
-        async function handleUserMessage(message) {
-            // 添加用户消息到历史记录和UI
-            const currentTime = new Date().toLocaleTimeString('zh-CN', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            // 显示用户消息
-            displayMessage(message, 'user', currentTime);
-            
-            // 添加到对话历史
-            conversationHistory.push({
-                role: 'user',
-                content: message,
-                timestamp: currentTime
-            });
-            
-            // 保存对话历史
-            saveConversationHistory();
-            
+        async function generateDivinationResponse(message, mood, emotion) {
             try {
-                // 检查是否是塔罗牌请求
-                const wantsTarot = message.includes('塔罗') || message.includes('占卜');
-                
-                if (wantsTarot) {
-                    // 显示"正在抽牌..."的临时消息
-                    const loadingMessageId = displayMessage('正在为你抽取塔罗牌...', 'ai', currentTime);
-                    
-                    // 选择合适的牌阵
-                    const spread = selectSpread(message);
-                    // 抽取塔罗牌
-                    const cards = drawTarotSpread(spread, message);
-                    // 生成解读
-                    const tarotReading = generateTarotReading(cards, spread, message);
-                    
-                    // 移除加载消息
-                    removeMessage(loadingMessageId);
-                    
-                    // 使用displayMessage函数显示塔罗牌解读
-                    const tarotReadingId = displayMessage(tarotReading, 'ai', currentTime, true);
-                    console.log("已显示塔罗牌阵HTML，消息ID:", tarotReadingId);
-                    
-                    // 添加到对话历史
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: tarotReading,
-                        timestamp: currentTime
-                    });
-                    
-                    // 保存对话历史
-                    saveConversationHistory();
-                    
-                    // 获取额外的AI回应
-                    const aiResponse = await sendMessageToAPI(message);
-                    
-                    // 显示额外的AI回应
-                    displayMessage(aiResponse, 'ai', currentTime);
-                    
-                    // 添加到对话历史
-            conversationHistory.push({
-                        role: 'assistant',
-                        content: aiResponse,
-                        timestamp: currentTime
-                    });
-                    
-                    // 保存对话历史
-                    saveConversationHistory();
-                } else {
-                    // 普通对话处理
-                    const aiResponse = await sendMessageToAPI(message);
-                    displayMessage(aiResponse, 'ai', currentTime);
-                    
-                    // 添加到对话历史
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: aiResponse,
-                        timestamp: currentTime
-                    });
-                    
-                    // 保存对话历史
-                    saveConversationHistory();
-                }
+                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_DEEPSEEK_API_KEY' // 需要替换为实际的API密钥
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            {
+                                role: "system",
+                                content: `你是一个专业的占卜师，用户当前心情为${mood}，情绪状态为${emotion}。请根据用户的问题和情绪状态，给出富有诗意的占卜建议。回答要简短、温暖、富有希望。`
+                            },
+                            {
+                                role: "user",
+                                content: message
+                            }
+                        ],
+                        temperature: 0.8,
+                        max_tokens: 200
+                    })
+                });
+
+                const data = await response.json();
+                return data.choices[0].message.content;
             } catch (error) {
-                console.error('处理消息时出错:', error);
-                displayMessage('抱歉，我现在无法回应。请稍后再试。', 'ai', currentTime);
+                console.error('占卜生成失败:', error);
+                return "抱歉，我现在无法为您占卜。请稍后再试。";
             }
-
         }
 
-        // 显示消息的函数
-        function displayMessage(content, role, timestamp, isHtml = false) {
-            const messageContainer = document.createElement('div');
-            messageContainer.className = `message ${role}-message`;
-            
-            // 生成唯一ID
-            const messageId = 'msg-' + Date.now() + Math.floor(Math.random() * 1000);
-            messageContainer.id = messageId;
-            
-            // 添加时间戳
-            const timeElement = document.createElement('div');
-            timeElement.className = 'message-time';
-            timeElement.textContent = timestamp;
-            
-            // 添加内容
-            const contentElement = document.createElement('div');
-            contentElement.className = 'message-content';
-            
-            // 根据内容类型选择如何处理
-            if (isHtml) {
-                // 使用innerHTML渲染HTML内容
-                contentElement.innerHTML = content;
-            } else {
-                // 处理纯文本内容
-                contentElement.textContent = content;
-                
-                // 如果内容包含换行，使用适当的HTML
-                if (content.includes('\n')) {
-                    contentElement.innerHTML = content.replace(/\n/g, '<br>');
+        async function handleUserMessage(message) {
+            // 添加用户消息到历史记录
+            conversationHistory.push({
+                role: "user",
+                content: message
+            });
+
+            // 分析用户情绪
+            if (conversationHistory.length <= 4) {
+                const analysis = await analyzeUserMood(message);
+                if (analysis) {
+                    userMood = analysis.mood;
+                    userEmotion = analysis.emotion;
                 }
             }
-            
-            // 构建消息
-            messageContainer.appendChild(contentElement);
-            
-            // 根据角色决定时间戳位置
-            if (role === 'user') {
-                messageContainer.appendChild(timeElement);
-            } else {
-                messageContainer.prepend(timeElement);
-            }
-            
-            // 添加到对话区域
-            const conversationDiv = document.querySelector('.overlay-message-box');
-            if (conversationDiv) {
-                conversationDiv.appendChild(messageContainer);
 
-                // 滚动到底部
-                conversationDiv.scrollTop = conversationDiv.scrollHeight;
-            } else {
-                console.error('找不到消息容器元素');
-            }
-            
-            return messageId;
+            // 生成占卜回应
+            const response = await generateDivinationResponse(message, userMood, userEmotion);
+
+            // 添加AI回应到历史记录
+            conversationHistory.push({
+                role: "assistant",
+                content: response
+            });
+
+            // 更新对话显示
+            updateConversationDisplay();
         }
 
-        // 移除消息的函数
-        function removeMessage(messageId) {
-            const messageElement = document.getElementById(messageId);
-            if (messageElement) {
-                messageElement.remove();
-            }
+        function updateConversationDisplay() {
+            const conversationDiv = document.getElementById('conversation');
+            conversationDiv.innerHTML = '';
+            
+            conversationHistory.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'ai-message'}`;
+                messageDiv.textContent = msg.content;
+                conversationDiv.appendChild(messageDiv);
+            });
+
+            // 滚动到底部
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
         }
 
-        // 修改发送消息的处理函数 - 使用DOMContentLoaded确保DOM已加载
-        document.addEventListener('DOMContentLoaded', function() {
-            // 使用正确的选择器找到发送按钮 - 网页上使用class="send-button"或id="sendButton"
-            const sendButton = document.querySelector('.send-button') || document.getElementById('sendButton');
-            if (sendButton) {
-                sendButton.addEventListener('click', async function() {
+        // 修改发送消息的处理函数
+        document.getElementById('send-button').addEventListener('click', async function() {
             const input = document.getElementById('message-input');
-                    if (input) {
             const message = input.value.trim();
+            
             if (message) {
                 await handleUserMessage(message);
                 input.value = '';
-                        }
             }
         });
-            } else {
-                console.error('找不到发送按钮元素');
-            }
 
         // 添加回车发送功能
-            const messageInput = document.getElementById('message-input');
-            if (messageInput) {
-                messageInput.addEventListener('keypress', async function(e) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
+        document.getElementById('message-input').addEventListener('keypress', async function(e) {
+            if (e.key === 'Enter') {
                 const message = this.value.trim();
-                        
                 if (message) {
                     await handleUserMessage(message);
                     this.value = '';
                 }
             }
         });
-            } else {
-                console.error('找不到消息输入框元素');
-            }
-        });
-
-        // 创建塔罗牌API对象，用于处理塔罗牌图片显示
-        const TarotAPI = {
-            // 映射中文牌名到英文文件名
-            cardMapping: {
-                "愚者": "00-the-fool",
-                "魔术师": "01-the-magician",
-                "女祭司": "02-the-high-priestess",
-                "女皇": "03-the-empress",
-                "皇帝": "04-the-emperor",
-                "教皇": "05-the-hierophant",
-                "恋人": "06-the-lovers",
-                "战车": "07-the-chariot",
-                "力量": "08-strength",
-                "隐士": "09-the-hermit",
-                "命运之轮": "10-wheel-of-fortune",
-                "正义": "11-justice",
-                "倒吊人": "12-the-hanged-man",
-                "死神": "13-death",
-                "节制": "14-temperance",
-                "恶魔": "15-the-devil",
-                "塔": "16-the-tower",
-                "星星": "17-the-star",
-                "月亮": "18-the-moon",
-                "太阳": "19-the-sun",
-                "审判": "20-judgement",
-                "世界": "21-the-world"
-            },
-            
-            // 获取卡牌图片数据（使用Base64）
-            getCardImagePath: function(cardName) {
-                // 检查TAROT_IMAGES是否存在（确保js/tarot-base64.js已加载）
-                if (typeof TAROT_IMAGES === 'undefined') {
-                    console.error('TAROT_IMAGES未定义，请确保tarot-base64.js已正确加载');
-                    return this.getFallbackImage(cardName);
-                }
-                
-                // 返回Base64编码的图片数据
-                if (TAROT_IMAGES[cardName]) {
-                    return TAROT_IMAGES[cardName];
-                } else {
-                    console.warn(`未找到牌 "${cardName}" 的Base64数据，使用备用图像代替`);
-                    return this.getFallbackImage(cardName);
-                }
-            },
-            
-            // 获取备用SVG图像，避免使用大型Base64数据
-            getFallbackImage: function(cardName) {
-                const colors = {
-                    "愚者": "#F9D649",
-                    "魔术师": "#7986CB",
-                    "女祭司": "#81C784",
-                    "女皇": "#E57373",
-                    "皇帝": "#FF8A65",
-                    "教皇": "#90A4AE",
-                    "恋人": "#F48FB1",
-                    "战车": "#9575CD",
-                    "力量": "#FFF176",
-                    "隐士": "#78909C",
-                    "命运之轮": "#4FC3F7",
-                    "正义": "#FFB74D",
-                    "倒吊人": "#BA68C8",
-                    "死神": "#212121",
-                    "节制": "#4DB6AC",
-                    "恶魔": "#EF5350",
-                    "塔": "#EF9A9A",
-                    "星星": "#B2DFDB",
-                    "月亮": "#E1F5FE",
-                    "太阳": "#FFCA28",
-                    "审判": "#B0BEC5",
-                    "世界": "#00897B"
-                };
-                
-                const color = colors[cardName] || "#455A64";
-                const nameDisplay = cardName || "未知牌";
-                
-                // 创建SVG图像
-                return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="350" viewBox="0 0 200 350">
-                    <rect x="5" y="5" width="190" height="340" rx="10" fill="${color}" stroke="white" stroke-width="3"/>
-                    <rect x="15" y="15" width="170" height="320" rx="5" fill="black" fill-opacity="0.3"/>
-                    <text x="100" y="175" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" fill="white">${nameDisplay}</text>
-                </svg>`;
-            },
-            
-            // 使用简单的占位符代替图片
-            usePlainPlaceholder: function(cardName) {
-                return {
-                    type: 'placeholder',
-                    html: `<div style="width:200px; height:300px; background:#333; border-radius:10px; display:flex; justify-content:center; align-items:center; color:white; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,0.5);">
-                        <div>
-                            <div style="font-size:20px; margin-bottom:10px;">${cardName}牌</div>
-                            <div style="font-size:12px; opacity:0.7;">(图片已简化显示)</div>
-                        </div>
-                    </div>`
-                };
-            },
-            
-            // 调试函数
-            debug: function() {
-                console.log("执行塔罗牌调试函数");
-                
-                // 检查TAROT_IMAGES是否已加载
-                if (typeof TAROT_IMAGES === 'undefined') {
-                    console.error('错误: TAROT_IMAGES未定义，tarot-base64.js可能未正确加载');
-                    alert('错误：塔罗牌图片数据未加载，请检查控制台');
-                    return "错误：塔罗牌图片数据未加载";
-                }
-                
-                // 显示测试图片
-                this.displaySingleCard("愚者");
-                console.log("塔罗牌调试函数已执行完毕，已显示愚者牌");
-                return "塔罗牌调试函数已执行完毕，已显示愚者牌";
-            },
-            
-            // 添加新的可视化调试函数
-            visualDebug: function() {
-                console.log("开始可视化调试...");
-                
-                // 检查TAROT_IMAGES是否已加载
-                if (typeof TAROT_IMAGES === 'undefined') {
-                    const errorMsg = '错误: TAROT_IMAGES未定义，tarot-base64.js可能未正确加载';
-                    console.error(errorMsg);
-                    alert(errorMsg);
-                    return false;
-                }
-                
-                // 创建调试界面
-                const debugDiv = document.createElement('div');
-                debugDiv.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.95);
-                    z-index: 9999;
-                    padding: 20px;
-                    box-sizing: border-box;
-                    overflow: auto;
-                    color: white;
-                    font-family: monospace;
-                `;
-                
-                // 添加标题和说明
-                let debugContent = `
-                    <div style="text-align:center; margin-bottom:20px;">
-                        <h2>塔罗牌图片调试面板</h2>
-                        <p>已加载 ${Object.keys(TAROT_IMAGES).length} 张塔罗牌图片</p>
-                        <button id="closeDebug" style="padding:5px 10px; margin-top:10px; cursor:pointer;">关闭调试</button>
-                    </div>
-                    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
-                `;
-                
-                // 添加卡牌预览
-                for (const [cardName, imgData] of Object.entries(TAROT_IMAGES)) {
-                    debugContent += `
-                        <div style="width:120px; margin:5px; text-align:center; background:rgba(255,255,255,0.1); border-radius:5px; padding:10px;">
-                            <img src="${imgData}" alt="${cardName}" style="width:100%; border-radius:5px;">
-                            <p style="margin:5px 0; font-size:12px;">${cardName}</p>
-                        </div>
-                    `;
-                }
-                
-                debugContent += `</div>`;
-                debugDiv.innerHTML = debugContent;
-                document.body.appendChild(debugDiv);
-                
-                // 添加关闭按钮事件
-                setTimeout(() => {
-                    document.getElementById('closeDebug').addEventListener('click', function() {
-                        document.body.removeChild(debugDiv);
-                    });
-                }, 100);
-                
-                return true;
-            },
-            
-            // 显示单张塔罗牌
-            displaySingleCard: function(cardName) {
-                // 获取牌的含义
-                const cardIndex = Object.keys(this.cardMapping).indexOf(cardName);
-                let meaning = "暂无释义";
-                let reversedMeaning = "暂无逆位释义";
-                
-                if (cardIndex >= 0 && cardIndex < TAROT_CARDS.major.length) {
-                    meaning = TAROT_CARDS.major[cardIndex].upright;
-                    reversedMeaning = TAROT_CARDS.major[cardIndex].reversed;
-                }
-                
-                // 使用SVG备用图像，避免加载大型Base64
-                const imageSrc = this.getFallbackImage(cardName);
-                console.log(`使用SVG图片替代 (${cardName})`);
-                
-                // 创建HTML
-                const html = `
-                    <div style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <h3 style="color: white; text-align: center;">${cardName}牌</h3>
-                        <div style="display: flex; justify-content: center;">
-                            <div style="width: 200px; margin: 10px; text-align: center;">
-                                <img src="${imageSrc}" 
-                                     alt="${cardName}" 
-                                     style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);"
-                                     onload="console.log('${cardName}牌图片加载成功')"
-                                     onerror="console.error('${cardName}牌图片加载失败')">
-                            </div>
-                        </div>
-                        <div style="color: white; margin-top: 15px; text-align: center;">
-                            <p><strong>正位含义:</strong> ${meaning}</p>
-                            <p><strong>逆位含义:</strong> ${reversedMeaning}</p>
-                        </div>
-                    </div>
-                `;
-                
-                return html; // 只返回HTML内容，让调用者决定如何显示
-            },
-        };
-        
-        // 全局暴露调试函数
-        window.debugTarot = function() {
-            return TarotAPI.debug();
-        };
-        
-        // 添加可视化调试函数
-        window.visualDebugTarot = function() {
-            return TarotAPI.visualDebug();
-        };
-
-        // 检查塔罗牌图片是否正确加载
-        window.checkTarotImages = function() {
-            console.log("检查塔罗牌图片是否已加载:");
-            
-            if (typeof TAROT_IMAGES === 'undefined') {
-                console.error('错误: TAROT_IMAGES未定义，tarot-base64.js可能未正确加载');
-                return false;
-            }
-            
-            console.log(`已加载 ${Object.keys(TAROT_IMAGES).length} 张塔罗牌图片`);
-            
-            // 检查几张关键牌
-            const testCards = ['愚者', '死神', '世界', '牌背'];
-            for (const card of testCards) {
-                if (TAROT_IMAGES[card]) {
-                    console.log(`✓ ${card}牌已加载，Base64长度: ${TAROT_IMAGES[card].length} 字符`);
-                    // 创建一个临时图片元素测试Base64数据
-                    const img = new Image();
-                    img.onload = () => console.log(`✓ ${card}牌图片可以正常显示 (${img.width}x${img.height})`);
-                    img.onerror = () => console.error(`✗ ${card}牌图片无法显示，可能Base64数据损坏`);
-                    img.src = TAROT_IMAGES[card];
-                } else {
-                    console.error(`✗ ${card}牌未找到`);
-                }
-            }
-            
-            return true;
-        };
-
-        // 修改 handleUserMessage 函数以支持单张塔罗牌查询
-        async function handleUserMessage(message) {
-            // 获取当前时间
-            const currentTime = new Date().toLocaleTimeString('zh-CN', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            // 显示用户消息
-            displayMessage(message, 'user', currentTime);
-            
-            // 添加到对话历史
-            conversationHistory.push({
-                role: 'user',
-                content: message,
-                timestamp: currentTime
-            });
-            
-            // 保存对话历史
-            saveConversationHistory();
-            
-            try {
-                // 检查是否是查看单张塔罗牌的请求
-                const singleCardMatch = message.match(/(看|显示|给我看)(一下)?[\s]*(愚者|魔术师|女祭司|女皇|皇帝|教皇|恋人|战车|力量|隐士|命运之轮|正义|倒吊人|死神|节制|恶魔|塔|星星|月亮|太阳|审判|世界)[\s]*牌/);
-                if (singleCardMatch) {
-                    const cardName = singleCardMatch[3];
-                    console.log("显示塔罗牌:", cardName);
-                    
-                    // 添加直接调试消息
-                    console.log("正在执行单张塔罗牌显示...");
-                    console.log("TAROT_IMAGES是否已定义:", typeof TAROT_IMAGES !== 'undefined');
-                    console.log("overlay-message-box元素:", document.querySelector('.overlay-message-box'));
-                    
-                    // 先检查TAROT_IMAGES是否已加载
-                    if (typeof TAROT_IMAGES === 'undefined') {
-                        console.error("错误：TAROT_IMAGES未定义，无法显示图片");
-                        const errorMsg = "无法加载塔罗牌图片数据，请刷新页面后重试。";
-                        displayMessage(errorMsg, 'ai', currentTime);
-                        return;
-                    }
-
-                    // 显示加载消息
-                    const loadingId = displayMessage("正在加载塔罗牌图片...", 'ai', currentTime);
-                    
-                    try {
-                        // 显示单张塔罗牌
-                        const cardHTML = TarotAPI.displaySingleCard(cardName);
-                        console.log("已生成卡牌HTML:", cardHTML.substring(0, 100) + "...");
-                        
-                        // 移除加载消息
-                        removeMessage(loadingId);
-                        
-                        // 直接显示塔罗牌HTML内容
-                        const tarotMessageId = displayMessage(cardHTML, 'ai', currentTime, true);
-                        console.log("已显示塔罗牌HTML，消息ID:", tarotMessageId);
-                        
-                        // 添加到对话历史
-                        conversationHistory.push({
-                            role: 'assistant',
-                            content: cardHTML,
-                            timestamp: currentTime
-                        });
-                        
-                        // 保存对话历史
-                        saveConversationHistory();
-                        
-                        // 显示简短的成功消息
-                        console.log("已成功添加塔罗牌到对话中");
-                        
-                        // 获取并显示额外的AI回应
-                        const aiResponse = await sendMessageToAPI(message);
-                        displayMessage(aiResponse, 'ai', currentTime);
-                        
-                        // 添加到对话历史
-                        conversationHistory.push({
-                            role: 'assistant',
-                            content: aiResponse,
-                            timestamp: currentTime
-                        });
-                        
-                        // 保存对话历史
-                        saveConversationHistory();
-                    } catch (error) {
-                        // 移除加载消息
-                        removeMessage(loadingId);
-                        
-                        // 显示错误
-                        console.error("显示塔罗牌时出错:", error);
-                        displayMessage("抱歉，显示塔罗牌时出现错误。", 'ai', currentTime);
-                    }
-                    
-                    return; // 结束处理
-                }
-                
-                // 检查是否是塔罗牌请求
-                const wantsTarot = message.includes('塔罗') || message.includes('占卜');
-                
-                if (wantsTarot) {
-                    // 显示"正在抽牌..."的临时消息
-                    const loadingMessageId = displayMessage('正在为你抽取塔罗牌...', 'ai', currentTime);
-                    
-                    // 选择合适的牌阵
-                    const spread = selectSpread(message);
-                    // 抽取塔罗牌
-                    const cards = drawTarotSpread(spread, message);
-                    // 生成解读
-                    const tarotReading = generateTarotReading(cards, spread, message);
-                    
-                    // 移除加载消息
-                    removeMessage(loadingMessageId);
-                    
-                    // 使用displayMessage函数显示塔罗牌解读
-                    const tarotReadingId = displayMessage(tarotReading, 'ai', currentTime, true);
-                    console.log("已显示塔罗牌阵HTML，消息ID:", tarotReadingId);
-                    
-                    // 添加到对话历史
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: tarotReading,
-                        timestamp: currentTime
-                    });
-                    
-                    // 保存对话历史
-                    saveConversationHistory();
-                    
-                    // 获取额外的AI回应
-                    const aiResponse = await sendMessageToAPI(message);
-                    
-                    // 显示额外的AI回应
-                    displayMessage(aiResponse, 'ai', currentTime);
-                    
-                    // 添加到对话历史
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: aiResponse,
-                        timestamp: currentTime
-                    });
-                    
-                    // 保存对话历史
-                    saveConversationHistory();
-                } else {
-                    // 普通对话处理
-                    const aiResponse = await sendMessageToAPI(message);
-                    displayMessage(aiResponse, 'ai', currentTime);
-                    
-                    // 添加到对话历史
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: aiResponse,
-                        timestamp: currentTime
-                    });
-                    
-                    // 保存对话历史
-                    saveConversationHistory();
-                }
-            } catch (error) {
-                console.error('处理消息时出错:', error);
-                displayMessage('抱歉，我现在无法回应。请稍后再试。', 'ai', currentTime);
-            }
-        }
     </script>
-    
-    <!-- 添加调试按钮 -->
-    <div id="debug-panel" style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; text-align: right;">
-        <button onclick="visualDebugTarot()" style="background: rgba(0,0,0,0.7); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-bottom: 5px; font-size: 12px;">
-            调试塔罗牌图片
-        </button>
-        <button onclick="(function(){document.getElementById('debug-panel').style.display='none';})()" style="background: rgba(0,0,0,0.7); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">
-            隐藏按钮
-        </button>
-    </div>
 </body>
 </html> 

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔罗牌图片测试</title>
+    <!-- 先加载图片数据 -->
+    <script src="js/tarot-base64.js"></script>
+    <!-- 再加载测试脚本 -->
+    <script src="js/tarot-test.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .card {
+            width: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            padding: 10px;
+            background: white;
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+        .card-name {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .test-results {
+            background: #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>塔罗牌图片测试</h1>
+    
+    <div class="buttons">
+        <button onclick="showCards()">显示所有卡牌</button>
+        <button onclick="checkTarotImages()">检查图片数据</button>
+    </div>
+    
+    <div class="test-results" id="results">
+        正在加载塔罗牌数据和测试结果...
+    </div>
+    
+    <div class="card-container" id="cardContainer"></div>
+    
+    <script>
+        // 检查TAROT_IMAGES并显示结果
+        function checkTarotImages() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            
+            if (typeof TAROT_IMAGES === 'undefined') {
+                resultsDiv.innerHTML = '错误: TAROT_IMAGES 未定义，检查 tarot-base64.js 是否正确加载';
+                return;
+            }
+            
+            let output = '检测结果:\n';
+            output += `- TAROT_IMAGES 已定义，类型: ${typeof TAROT_IMAGES}\n`;
+            output += `- TAROT_IMAGES 包含 ${Object.keys(TAROT_IMAGES).length} 个键\n\n`;
+            
+            const cardsToCheck = ['愚者', '魔术师', '女祭司', '女皇', '皇帝', '教皇', '恋人', '战车', '力量', '隐士'];
+            
+            cardsToCheck.forEach(card => {
+                if (TAROT_IMAGES[card]) {
+                    const dataLength = TAROT_IMAGES[card].length;
+                    output += `- ${card}牌: 数据存在，长度: ${dataLength}\n`;
+                    output += `  数据开头: ${TAROT_IMAGES[card].substring(0, 30)}...\n`;
+                } else {
+                    output += `- ${card}牌: 数据不存在\n`;
+                }
+            });
+            
+            resultsDiv.textContent = output;
+        }
+        
+        // 显示所有卡牌
+        function showCards() {
+            const container = document.getElementById('cardContainer');
+            container.innerHTML = '';
+            
+            if (typeof TAROT_IMAGES === 'undefined') {
+                container.innerHTML = '<p>错误: 无法加载塔罗牌数据</p>';
+                return;
+            }
+            
+            const cardNames = Object.keys(TAROT_IMAGES);
+            
+            cardNames.forEach(cardName => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                
+                const img = document.createElement('img');
+                img.src = TAROT_IMAGES[cardName];
+                img.alt = cardName;
+                img.onerror = function() {
+                    this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300"><rect width="200" height="300" fill="#333"/><text x="100" y="150" font-family="Arial" font-size="16" fill="white" text-anchor="middle">图片加载失败</text></svg>';
+                };
+                
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'card-name';
+                nameDiv.textContent = cardName;
+                
+                cardDiv.appendChild(img);
+                cardDiv.appendChild(nameDiv);
+                container.appendChild(cardDiv);
+            });
+        }
+        
+        // 页面加载后自动执行检查
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(checkTarotImages, 500);
+        });
+    </script>
+</body>
+</html> 
