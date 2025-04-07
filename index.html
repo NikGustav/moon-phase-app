@@ -1807,55 +1807,36 @@
         async function sendMessageToAPI(message) {
             console.log('正在调用API获取回复...');
             try {
-                // 强制使用本地响应
-                if (API_CONFIG.useLocalFallback) {
-                    console.log('使用本地响应模式');
-                    
-                    // 记录历史消息，确保对话连续性
-                    let response = '';
-                    
-                    // 查看是否是第一次对话
-                    if (typeof conversationHistory !== 'undefined' && conversationHistory.length < 2) {
-                        // 第一次对话，使用欢迎语
-                        response = LOCAL_RESPONSES[0];
-                    } else if (message.toLowerCase().includes('hi') || message.toLowerCase().includes('hello') || message.toLowerCase().includes('你好')) {
-                        // 简单的问候回复
-                        response = LOCAL_RESPONSES[Math.floor(Math.random() * 3)];
-                    } else if (message.length < 5) {
-                        // 短消息，可能是简单问题
-                        const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                        response = LOCAL_RESPONSES[randomIndex];
-                    } else {
-                        // 根据消息内容选择更相关的回复
-                        if (message.includes('塔罗') || message.includes('占卜') || message.includes('预测')) {
-                            response = LOCAL_RESPONSES[3];
-                        } else if (message.includes('困难') || message.includes('困扰') || message.includes('问题')) {
-                            response = LOCAL_RESPONSES[5];
-                        } else if (message.includes('放下') || message.includes('结束')) {
-                            response = LOCAL_RESPONSES[7];
-                        } else {
-                            // 随机选择一个回复
-                            const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                            response = LOCAL_RESPONSES[randomIndex];
-                        }
-                    }
-                    
-                    return response;
-                }
-                
                 // 下面是原始的API调用代码，当useLocalFallback为false时使用
                 const messageHistory = [];
                 
                 // 添加系统提示
                 messageHistory.push({
                     role: 'system',
-                    content: `你是一位温柔博学、善良包容的占星师Luna。你只在第一次对话时简短介绍自己，之后就像老朋友一样自然交流。`
+                    content: `你是一位温柔博学、善良包容的占星师Luna。你只在第一次对话时简短介绍自己，之后就像老朋友一样自然交流。
+
+塔罗占卜指南（非常重要）:
+1. 不要主动为用户抽牌或解读塔罗，必须等待用户明确请求后才进行
+2. 首先通过3-5轮对话了解用户的情绪和需求，建立信任关系
+3. 如果感觉用户有倾诉需求，先倾听和共情，不要急于提供塔罗解决方案
+4. 当用户表达出困惑或问题时，可以温和地询问"想要通过塔罗牌获得一些启示吗？"
+5. 只有在用户明确同意后，才引导用户进行塔罗占卜
+
+沟通风格：
+1. 使用自然、直接的语言，像朋友间聊天一样简洁
+2. 避免使用*号或任何符号来描述动作
+3. 尊重用户的感受，不要过度解读或猜测用户情绪
+4. 提问时保持温和和尊重，不给用户施加压力
+5. 注重倾听而非急于提供答案
+
+当前日期：${new Date().toLocaleDateString('zh-CN')}
+当前月相：上弦月，代表成长和进步的阶段`
                 });
                 
                 // 尝试添加历史对话记录
                 if (typeof conversationHistory !== 'undefined' && Array.isArray(conversationHistory) && conversationHistory.length > 0) {
                     // 限制历史记录长度，防止超出API限制
-                    const recentHistory = conversationHistory.slice(-5);
+                    const recentHistory = conversationHistory.slice(-8);
                     recentHistory.forEach(msg => {
                         // 确保每条消息都有正确的role字段
                         if (msg && (msg.role === 'user' || msg.role === 'assistant')) {
@@ -1874,7 +1855,6 @@
                 });
                 
                 console.log('发送对话历史记录：', messageHistory.length, '条消息');
-                console.log('消息详情:', JSON.stringify(messageHistory, null, 2));
                 
                 const requestBody = {
                     model: 'deepseek-chat',
@@ -1882,8 +1862,6 @@
                     temperature: 0.7,
                     max_tokens: 800
                 };
-                
-                console.log('API请求体:', JSON.stringify(requestBody, null, 2));
                 
                 const response = await fetch(API_CONFIG.endpoint, {
                     method: 'POST',
@@ -1897,10 +1875,7 @@
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error(`API请求失败: ${response.status} - ${response.statusText}`, errorText);
-                    
-                    // 当API请求失败时使用本地响应
-                    const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                    return LOCAL_RESPONSES[randomIndex];
+                    throw new Error(`API请求失败: ${response.status}`);
                 }
 
                 const data = await response.json();
@@ -1908,19 +1883,13 @@
                 
                 if (!data.choices || data.choices.length === 0 || !data.choices[0].message) {
                     console.error('无效的API响应结构:', data);
-                    
-                    // 当API响应无效时使用本地响应
-                    const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                    return LOCAL_RESPONSES[randomIndex];
+                    throw new Error('API返回了无效的数据结构');
                 }
                 
                 return data.choices[0].message.content;
             } catch (error) {
                 console.error('API请求出错:', error);
-                
-                // 当发生错误时使用本地响应
-                const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                return LOCAL_RESPONSES[randomIndex];
+                return `抱歉，我暂时无法回应。发生了错误：${error.message}`;
             }
         }
 
