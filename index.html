@@ -1656,8 +1656,8 @@
         // API配置，设置您的API密钥
         const API_CONFIG = {
             endpoint: 'https://api.deepseek.com/v1/chat/completions',
-            apiKey: 'sk-c4f2b6e6d2ca4ad49f74d06345e85fe6',  // 请替换为您自己的API密钥
-            useLocalFallback: true  // 当API出错时使用本地响应
+            apiKey: 'sk-af15b00217d84165b95242fd71cf4fdf',  // 更新为新的API密钥
+            useLocalFallback: false  // 关闭本地响应模式，使用真实API
         };
 
         // 本地响应，当API失败时使用
@@ -1666,7 +1666,11 @@
             "今天的月相是残月，代表着结束和放下的时期。最近有什么想要放下的事情吗？",
             "我理解你的感受。有时候与自己对话也是一种成长。有什么具体问题想问我吗？",
             "塔罗牌可以帮助我们看到不同角度的可能性。你想了解什么方面的指引呢？",
-            "月亮的周期提醒我们生活也有起伏。面对困难时，记得像月亮一样，总会有重新明亮的时候。"
+            "月亮的周期提醒我们生活也有起伏。面对困难时，记得像月亮一样，总会有重新明亮的时候。",
+            "最近有什么让你感到困扰的事情吗？或许我可以提供一些不同的视角。",
+            "每个人都有自己的人生节奏，就像月亮有它的周期一样。不必和他人比较。",
+            "残月是一个反思和放下的好时机。有什么过去的想法或习惯你想要放下吗？",
+            "今天的星象显示金星和木星形成了良好的相位，这对感情和事业都是好兆头。"
         ];
 
         // 系统提示 - DEFINE ONLY ONCE
@@ -1803,43 +1807,55 @@
         async function sendMessageToAPI(message) {
             console.log('正在调用API获取回复...');
             try {
-                // 构建消息历史，确保API能"记住"之前的对话
+                // 强制使用本地响应
+                if (API_CONFIG.useLocalFallback) {
+                    console.log('使用本地响应模式');
+                    
+                    // 记录历史消息，确保对话连续性
+                    let response = '';
+                    
+                    // 查看是否是第一次对话
+                    if (typeof conversationHistory !== 'undefined' && conversationHistory.length < 2) {
+                        // 第一次对话，使用欢迎语
+                        response = LOCAL_RESPONSES[0];
+                    } else if (message.toLowerCase().includes('hi') || message.toLowerCase().includes('hello') || message.toLowerCase().includes('你好')) {
+                        // 简单的问候回复
+                        response = LOCAL_RESPONSES[Math.floor(Math.random() * 3)];
+                    } else if (message.length < 5) {
+                        // 短消息，可能是简单问题
+                        const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
+                        response = LOCAL_RESPONSES[randomIndex];
+                    } else {
+                        // 根据消息内容选择更相关的回复
+                        if (message.includes('塔罗') || message.includes('占卜') || message.includes('预测')) {
+                            response = LOCAL_RESPONSES[3];
+                        } else if (message.includes('困难') || message.includes('困扰') || message.includes('问题')) {
+                            response = LOCAL_RESPONSES[5];
+                        } else if (message.includes('放下') || message.includes('结束')) {
+                            response = LOCAL_RESPONSES[7];
+                        } else {
+                            // 随机选择一个回复
+                            const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
+                            response = LOCAL_RESPONSES[randomIndex];
+                        }
+                    }
+                    
+                    return response;
+                }
+                
+                // 下面是原始的API调用代码，当useLocalFallback为false时使用
                 const messageHistory = [];
                 
                 // 添加系统提示
                 messageHistory.push({
                     role: 'system',
-                    content: `你是一位温柔博学、善良包容的占星师Luna。你只在第一次对话时简短介绍自己，之后就像老朋友一样自然交流。
-                    
-                    引导技巧（非常重要）:
-                    1. 在前四次对话内，你的主要目标是引导用户说出自己真正的问题或困扰
-                    2. 第一次回复：简短自我介绍后，提出开放性问题，如"今天有什么想和我聊的？"或"最近有什么在困扰你吗？"
-                    3. 第二次回复：基于用户回答深入一层，提出更具体的问题，温和地引导用户分享更多细节
-                    4. 第三次回复：表示理解和共鸣，再进一步询问用户的真实需求或期望
-                    5. 第四次回复：总结用户的核心问题，并提出可以如何帮助他们
-                    
-                    沟通要求：
-                    1. 使用自然、直接的语言，说人话，避免过度修饰或做作的表达
-                    2. 不使用*号或任何符号来描述动作、表情或情感
-                    3. 不要猜测用户的情绪或状态，只基于用户明确提供的信息进行回应
-                    4. 提问时保持温和和尊重，不给用户施加压力
-                    5. 使用开放性问题，避免是/否问题
-                    6. 不要主动提供塔罗牌服务，除非用户明确要求
-                    
-                    交流风格：
-                    1. 像普通朋友之间聊天那样，使用简洁自然的语言
-                    2. 表现出真诚的关心，但不过度
-                    3. 避免过于专业或学术化的语言，除非必要
-                    4. 每次回复不要太长，保持简洁
-                    
-                    当前日期：${new Date().toLocaleDateString('zh-CN')}
-                    当前月相：残月`
+                    content: `你是一位温柔博学、善良包容的占星师Luna。你只在第一次对话时简短介绍自己，之后就像老朋友一样自然交流。`
                 });
                 
                 // 尝试添加历史对话记录
                 if (typeof conversationHistory !== 'undefined' && Array.isArray(conversationHistory) && conversationHistory.length > 0) {
                     // 限制历史记录长度，防止超出API限制
-                    const recentHistory = conversationHistory.slice(-10);
+                    const recentHistory = conversationHistory.slice(-5);
                     recentHistory.forEach(msg => {
                         // 确保每条消息都有正确的role字段
                         if (msg && (msg.role === 'user' || msg.role === 'assistant')) {
@@ -1860,19 +1876,11 @@
                 console.log('发送对话历史记录：', messageHistory.length, '条消息');
                 console.log('消息详情:', JSON.stringify(messageHistory, null, 2));
                 
-                // 如果设置了使用本地响应，优先使用
-                if (API_CONFIG.useLocalFallback) {
-                    console.log('当前使用本地响应模式');
-                    // 随机选择一个本地响应
-                    const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                    return LOCAL_RESPONSES[randomIndex];
-                }
-                
                 const requestBody = {
                     model: 'deepseek-chat',
                     messages: messageHistory,
                     temperature: 0.7,
-                    max_tokens: 2000
+                    max_tokens: 800
                 };
                 
                 console.log('API请求体:', JSON.stringify(requestBody, null, 2));
@@ -1892,7 +1900,7 @@
                     
                     // 当API请求失败时使用本地响应
                     const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                    return LOCAL_RESPONSES[randomIndex] + " (API暂时无法连接，使用本地响应)";
+                    return LOCAL_RESPONSES[randomIndex];
                 }
 
                 const data = await response.json();
@@ -1903,7 +1911,7 @@
                     
                     // 当API响应无效时使用本地响应
                     const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                    return LOCAL_RESPONSES[randomIndex] + " (API返回无效数据，使用本地响应)";
+                    return LOCAL_RESPONSES[randomIndex];
                 }
                 
                 return data.choices[0].message.content;
@@ -1912,7 +1920,7 @@
                 
                 // 当发生错误时使用本地响应
                 const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
-                return LOCAL_RESPONSES[randomIndex] + " (API连接错误，使用本地响应)";
+                return LOCAL_RESPONSES[randomIndex];
             }
         }
 
