@@ -1656,7 +1656,7 @@
         // API 配置
         const API_CONFIG = {
             endpoint: 'https://api.deepseek.com/v1/chat/completions',
-            apiKey: 'sk-9fed399fcaa544568bd6aadf18495172' // 更新的API密钥
+            apiKey: 'sk-c4f2b6e6d2ca4ad49f74d06345e85fe6'  // 请替换为您自己的API密钥
         };
 
         // 系统提示 - DEFINE ONLY ONCE
@@ -1818,12 +1818,12 @@
                     
                     交流风格：
                     1. 像普通朋友之间聊天那样，使用简洁自然的语言
-                    2. 使用生活化的表达解释概念，让人容易理解
+                    2. 表现出真诚的关心，但不过度
                     3. 避免过于专业或学术化的语言，除非必要
-                    4. 尊重用户的想法，提供支持和鼓励，而不是教条式的指导
+                    4. 每次回复不要太长，保持简洁
                     
                     当前日期：${new Date().toLocaleDateString('zh-CN')}
-                    当前月相：上弦月`
+                    当前月相：残月`
                 });
                 
                 // 尝试添加历史对话记录
@@ -1848,6 +1848,16 @@
                 });
                 
                 console.log('发送对话历史记录：', messageHistory.length, '条消息');
+                console.log('消息详情:', JSON.stringify(messageHistory, null, 2));
+                
+                const requestBody = {
+                    model: 'deepseek-chat',
+                    messages: messageHistory,
+                    temperature: 0.7,
+                    max_tokens: 2000
+                };
+                
+                console.log('API请求体:', JSON.stringify(requestBody, null, 2));
                 
                 const response = await fetch(API_CONFIG.endpoint, {
                     method: 'POST',
@@ -1855,12 +1865,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${API_CONFIG.apiKey}`
                     },
-                    body: JSON.stringify({
-                        model: 'deepseek-chat',
-                        messages: messageHistory,
-                        temperature: 0.7,
-                        max_tokens: 2000
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 if (!response.ok) {
@@ -1880,7 +1885,8 @@
                 return data.choices[0].message.content;
             } catch (error) {
                 console.error('API请求出错:', error);
-                throw new Error(`API调用失败: ${error.message || '未知错误'}`);
+                // 如果API调用失败，返回一个友好的错误提示
+                return `抱歉，我暂时无法回应。API请求失败：${error.message || '未知错误'}`;
             }
         }
 
@@ -1941,58 +1947,40 @@
                     });
                 }
 
-                try {
-                    // 调用API获取回复
-                    const aiResponse = await sendMessageToAPI(message);
+                // 调用API获取回复
+                const aiResponse = await sendMessageToAPI(message);
+                
+                // 移除思考状态
+                const indicator = document.querySelector('.thinking-indicator');
+                if (indicator) indicator.remove();
+                
+                // 显示AI回复
+                const aiMessageDiv = document.createElement('div');
+                aiMessageDiv.className = 'message ai-message';
+                aiMessageDiv.innerHTML = `
+                    <div class="message-content">${aiResponse}</div>
+                    <div class="message-time">${currentTime}</div>
+                `;
+                overlayMessageBox.appendChild(aiMessageDiv);
+                overlayMessageBox.scrollTop = overlayMessageBox.scrollHeight;
+                
+                // 添加AI回复到历史记录
+                if (typeof conversationHistory !== 'undefined') {
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: aiResponse,
+                        timestamp: currentTime
+                    });
                     
-                    // 移除思考状态
-                    const indicator = document.querySelector('.thinking-indicator');
-                    if (indicator) indicator.remove();
-                    
-                    // 显示AI回复
-                    const aiMessageDiv = document.createElement('div');
-                    aiMessageDiv.className = 'message ai-message';
-                    aiMessageDiv.innerHTML = `
-                        <div class="message-content">${aiResponse}</div>
-                        <div class="message-time">${currentTime}</div>
-                    `;
-                    overlayMessageBox.appendChild(aiMessageDiv);
-                    overlayMessageBox.scrollTop = overlayMessageBox.scrollHeight;
-                    
-                    // 添加AI回复到历史记录
-                    if (typeof conversationHistory !== 'undefined') {
-                        conversationHistory.push({
-                            role: 'assistant',
-                            content: aiResponse,
-                            timestamp: currentTime
-                        });
-                        
-                        // 保存对话历史
-                        if (typeof saveConversationHistory === 'function') {
-                            saveConversationHistory();
-                        }
-                        
-                        // 更新记录页面
-                        if (typeof updateChatRecords === 'function') {
-                            updateChatRecords();
-                        }
+                    // 保存对话历史
+                    if (typeof saveConversationHistory === 'function') {
+                        saveConversationHistory();
                     }
-                } catch (error) {
-                    console.error('API调用失败:', error);
                     
-                    // 移除思考状态
-                    const indicator = document.querySelector('.thinking-indicator');
-                    if (indicator) indicator.remove();
-                    
-                    // 显示错误消息
-                    const errorMessageDiv = document.createElement('div');
-                    errorMessageDiv.className = 'message ai-message error-message';
-                    errorMessageDiv.innerHTML = `
-                        <div class="message-content">抱歉，我暂时无法回应。API请求失败：${error.message || '未知错误'}</div>
-                        <div class="message-time">${currentTime}</div>
-                    `;
-                    overlayMessageBox.appendChild(errorMessageDiv);
-                    overlayMessageBox.scrollTop = overlayMessageBox.scrollHeight;
+                    // 更新记录页面
+                    if (typeof updateChatRecords === 'function') {
+                        updateChatRecords();
+                    }
                 }
             } catch (e) {
                 console.error('消息处理出错:', e);
@@ -2382,103 +2370,122 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("DOM已加载，开始初始化...");
             
-            // 创建星空背景
-            createStars();
-            
-            // 加载对话历史
-            loadConversationHistory();
-            
-            // 更新聊天记录
-            updateChatRecords();
-            
-            // 更新月相显示
-            updateMoonPhaseDisplay();
-            
-            // 设置欢迎页为活动页面
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            const welcomePage = document.getElementById('welcome-page');
-            if (welcomePage) {
-                welcomePage.classList.add('active');
-            } else {
-                // 如果欢迎页不存在，回退到主页
-                const homePage = document.getElementById('home-page');
-                if (homePage) homePage.classList.add('active');
-            }
-            
-            // 绑定所有导航项事件
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.onclick = function() {
-                    const pageId = this.getAttribute('data-page');
-                    if (pageId) {
-                        switchPage(pageId, this);
-                    }
-                };
-            });
-            
-            // 绑定主页发送按钮事件
-            const homeSendButton = document.querySelector('#home-page .send-button');
-            const homeMessageInput = document.querySelector('#home-page .message-input');
-            
-            if (homeSendButton && homeMessageInput) {
-                homeSendButton.onclick = function() {
-                    const message = homeMessageInput.value.trim();
-                    if (message) {
-                        showOverlay();
-                        setTimeout(() => {
-                            const overlayInput = document.querySelector('.overlay-input');
-                            if (overlayInput) {
-                                overlayInput.value = message;
-                                // 手动触发消息发送
-                                handleMessageSend(message);
-                                // 清空主页输入框
-                                homeMessageInput.value = '';
-                            }
-                        }, 300);
-                    }
-                };
-            }
-            
-            // 绑定对话框发送按钮事件
-            const overlaySendButton = document.querySelector('.overlay-send');
-            const overlayInput = document.querySelector('.overlay-input');
-            
-            if (overlaySendButton && overlayInput) {
-                // 使用直接赋值onclick，避免重复绑定
-                overlaySendButton.onclick = function() {
-                    const message = overlayInput.value.trim();
-                    if (message) {
-                        handleMessageSend(message);
-                    }
-                };
+            try {
+                // 创建星空背景
+                if (typeof createStars === 'function') {
+                    createStars();
+                }
                 
-                // 绑定输入框回车事件
-                overlayInput.onkeydown = function(e) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        const message = this.value.trim();
+                // 加载对话历史
+                if (typeof loadConversationHistory === 'function') {
+                    loadConversationHistory();
+                }
+                
+                // 更新聊天记录
+                if (typeof updateChatRecords === 'function') {
+                    updateChatRecords();
+                }
+                
+                // 更新月相显示
+                if (typeof updateMoonPhaseDisplay === 'function') {
+                    updateMoonPhaseDisplay();
+                }
+                
+                // 设置欢迎页为活动页面
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                const welcomePage = document.getElementById('welcome-page');
+                if (welcomePage) {
+                    welcomePage.classList.add('active');
+                } else {
+                    // 如果欢迎页不存在，回退到主页
+                    const homePage = document.getElementById('home-page');
+                    if (homePage) homePage.classList.add('active');
+                }
+                
+                // 绑定所有导航项事件
+                const navItems = document.querySelectorAll('.nav-item');
+                if (navItems && navItems.length > 0) {
+                    navItems.forEach(item => {
+                        if (item) {
+                            item.onclick = function() {
+                                const pageId = this.getAttribute('data-page');
+                                if (pageId && typeof switchPage === 'function') {
+                                    switchPage(pageId, this);
+                                }
+                            };
+                        }
+                    });
+                }
+                
+                // 绑定主页发送按钮事件
+                const homeSendButton = document.querySelector('#home-page .send-button');
+                const homeMessageInput = document.querySelector('#home-page .message-input');
+                
+                if (homeSendButton && homeMessageInput) {
+                    homeSendButton.onclick = function() {
+                        const message = homeMessageInput.value.trim();
+                        if (message) {
+                            if (typeof showOverlay === 'function') {
+                                showOverlay();
+                            }
+                            setTimeout(() => {
+                                const overlayInput = document.querySelector('.overlay-input');
+                                if (overlayInput) {
+                                    overlayInput.value = message;
+                                    // 手动触发消息发送
+                                    handleMessageSend(message);
+                                    // 清空主页输入框
+                                    homeMessageInput.value = '';
+                                }
+                            }, 300);
+                        }
+                    };
+                }
+                
+                // 绑定对话框发送按钮事件
+                const overlaySendButton = document.querySelector('.overlay-send');
+                const overlayInput = document.querySelector('.overlay-input');
+                
+                if (overlaySendButton && overlayInput) {
+                    // 使用直接赋值onclick，避免重复绑定
+                    overlaySendButton.onclick = function() {
+                        const message = overlayInput.value.trim();
                         if (message) {
                             handleMessageSend(message);
                         }
-                    }
-                };
+                    };
+                    
+                    // 绑定输入框回车事件
+                    overlayInput.onkeydown = function(e) {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            const message = this.value.trim();
+                            if (message) {
+                                handleMessageSend(message);
+                            }
+                        }
+                    };
+                }
+                
+                // 绑定开始按钮事件
+                const startButton = document.querySelector('.start-button');
+                if (startButton && typeof startApp === 'function') {
+                    startButton.onclick = startApp;
+                }
+                
+                // 绑定关闭对话框按钮事件
+                const closeButton = document.querySelector('.close-overlay');
+                if (closeButton && typeof closeOverlay === 'function') {
+                    closeButton.onclick = closeOverlay;
+                }
+                
+                console.log("初始化完成，所有事件已绑定");
+            } catch (error) {
+                console.error("初始化出错:", error);
             }
-            
-            // 绑定开始按钮事件
-            const startButton = document.querySelector('.start-button');
-            if (startButton) {
-                startButton.onclick = startApp;
-            }
-            
-            // 绑定关闭对话框按钮事件
-            const closeButton = document.querySelector('.close-overlay');
-            if (closeButton) {
-                closeButton.onclick = closeOverlay;
-            }
-            
-            console.log("初始化完成，所有事件已绑定");
         });
     </script>
 </body>
