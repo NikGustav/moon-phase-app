@@ -1653,11 +1653,21 @@
         // 全局变量 - DECLARE ONLY ONCE
         let conversationHistory = [];
         
-        // API 配置
+        // API配置，设置您的API密钥
         const API_CONFIG = {
             endpoint: 'https://api.deepseek.com/v1/chat/completions',
-            apiKey: 'sk-c4f2b6e6d2ca4ad49f74d06345e85fe6'  // 请替换为您自己的API密钥
+            apiKey: 'sk-c4f2b6e6d2ca4ad49f74d06345e85fe6',  // 请替换为您自己的API密钥
+            useLocalFallback: true  // 当API出错时使用本地响应
         };
+
+        // 本地响应，当API失败时使用
+        const LOCAL_RESPONSES = [
+            "你好，我是Luna，很高兴认识你。今天有什么想聊的吗？",
+            "今天的月相是残月，代表着结束和放下的时期。最近有什么想要放下的事情吗？",
+            "我理解你的感受。有时候与自己对话也是一种成长。有什么具体问题想问我吗？",
+            "塔罗牌可以帮助我们看到不同角度的可能性。你想了解什么方面的指引呢？",
+            "月亮的周期提醒我们生活也有起伏。面对困难时，记得像月亮一样，总会有重新明亮的时候。"
+        ];
 
         // 系统提示 - DEFINE ONLY ONCE
         const SYSTEM_PROMPT = `你是一位温柔体贴、知性的女性占星师,精通月相、占星学和星座知识,也擅长塔罗牌解读。你的名字叫 Luna。当前日期是 ${new Date().toLocaleDateString('zh-CN')}。当前的月相是 {moon_phase} ({moon_phase_description})。
@@ -1850,6 +1860,14 @@
                 console.log('发送对话历史记录：', messageHistory.length, '条消息');
                 console.log('消息详情:', JSON.stringify(messageHistory, null, 2));
                 
+                // 如果设置了使用本地响应，优先使用
+                if (API_CONFIG.useLocalFallback) {
+                    console.log('当前使用本地响应模式');
+                    // 随机选择一个本地响应
+                    const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
+                    return LOCAL_RESPONSES[randomIndex];
+                }
+                
                 const requestBody = {
                     model: 'deepseek-chat',
                     messages: messageHistory,
@@ -1871,7 +1889,10 @@
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error(`API请求失败: ${response.status} - ${response.statusText}`, errorText);
-                    throw new Error(`API请求失败: ${response.status} - ${response.statusText}`);
+                    
+                    // 当API请求失败时使用本地响应
+                    const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
+                    return LOCAL_RESPONSES[randomIndex] + " (API暂时无法连接，使用本地响应)";
                 }
 
                 const data = await response.json();
@@ -1879,14 +1900,19 @@
                 
                 if (!data.choices || data.choices.length === 0 || !data.choices[0].message) {
                     console.error('无效的API响应结构:', data);
-                    throw new Error('API返回了无效的数据结构');
+                    
+                    // 当API响应无效时使用本地响应
+                    const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
+                    return LOCAL_RESPONSES[randomIndex] + " (API返回无效数据，使用本地响应)";
                 }
                 
                 return data.choices[0].message.content;
             } catch (error) {
                 console.error('API请求出错:', error);
-                // 如果API调用失败，返回一个友好的错误提示
-                return `抱歉，我暂时无法回应。API请求失败：${error.message || '未知错误'}`;
+                
+                // 当发生错误时使用本地响应
+                const randomIndex = Math.floor(Math.random() * LOCAL_RESPONSES.length);
+                return LOCAL_RESPONSES[randomIndex] + " (API连接错误，使用本地响应)";
             }
         }
 
