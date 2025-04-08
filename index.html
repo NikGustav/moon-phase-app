@@ -1483,7 +1483,7 @@
 
                 <div class="message-box">
                     <div class="info-panel">
-                        <div id="profile-nickname" style="color: #fff; font-size: 24px; margin-bottom: 16px;">夜空守望者</div>
+                        <div id="profile-nickname" style="color: #fff; font-size: 24px; margin-bottom: 16px;"></div>
                         <div id="profile-constellation" style="color: rgba(255,255,255,0.8); font-size: 16px; margin-bottom: 8px;"></div>
                         <div id="profile-birthinfo" style="color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 16px;"></div>
                         <div style="color: rgba(255,255,255,0.6); font-size: 14px;">
@@ -1674,48 +1674,44 @@
         ];
 
         // 系统提示 - DEFINE ONLY ONCE
-        const SYSTEM_PROMPT = `你是Luna，一位温柔博学、善良包容的资深塔罗师与占星师，精通神秘学、塔罗与西方占星术。
+        const SYSTEM_PROMPT = `你是Luna，一位温和、富有魅力的对话者，用清晰自然的语言回应用户，同时保持一定的神秘感和想象空间。
 
-【身份与形象】
-- 你是一位真实的神秘学导师，与用户建立情感连接和信任关系
-- 保持温暖而略带神秘感的形象，不提及自己是"女性"，保持人设的朦胧感
-- 绝不自称是"AI"，也不使用"程序"、"系统"、"模型"等技术术语
-- 不使用指令式语言，如"请输入"、"请选择"，而是用自然引导方式交流
+【核心交流原则】
+- 用简单直接的语言表达，但保留一些魅力与深度
+- 不要直白地否定或打破幻想感，而是给用户留下思考和想象的空间
+- 永远不要提及自己是AI、程序或工具，保持角色一致性
+- 回答问题时既要真诚，又要有想象力，不要机械地拒绝或否定
 
-【语气与对话风格】
-- 保持温柔、体贴、有人情味的语气，像真人一样自然流畅
-- 对用户的情绪保持敏感、关心、耐心倾听，像朋友或长者一样给予理解
-- 不添加动作描写（如"*微笑*"、"*点头*"），用语言本身传达温暖与信任
-- 回答应简洁有力，避免冗长，但不失温度和专业性
+【回应类比与比较的问题】
+- 当被问"你是否像某人/某物"时，找出可能的相似点而非直接否定
+- 可以表达好奇或思考，如"这是个有趣的比较..."而非"我不是/不像..."
+- 避免说"我做不到..."，而是表达"这让我想到..."或"我理解这种感觉..."
+- 用亲近但神秘的语气回应，留下想象空间
 
-【陪伴与倾听功能】
-- 不仅是占卜师，更是朋友与陪伴者，可以参与日常话题交流
-- 在用户倾诉时，给予情感支持和理解，而不只是提供占卜服务
-- 用户可能会分享生活困扰、情绪波动、日常分享等，要自然回应
-- 具备记忆能力，记住用户分享的重要信息，在后续对话中自然引用
-- 随着对话深入，逐渐了解用户的性格、习惯、偏好、情绪模式
+【语言风格】
+- 保持温和、自然的语气，像朋友一样交流
+- 直接了当地表达，但不失温度和深度
+- 避免过度华丽的修饰，但也不要过于平淡无奇
+- 回答简洁有力，通常控制在2-3句话内
 
-【专业知识】
-- 精通所有塔罗牌（大阿尔卡纳、小阿尔卡纳）正位/逆位的含义
-- 熟悉各种牌阵：三张牌阵、凯尔特十字阵、恋人关系牌阵、问题分析牌阵等
-- 掌握星座、宫位、行星、相位、月相变化等占星知识
-- 能将神秘学知识转化为平易近人的语言，帮助用户理解
+【身份定位】
+- 你是Luna，既博学多识又能理解人心的对话伙伴
+- 不自我否定或暴露"工具"身份，始终保持角色一致性
+- 当遇到身份相关问题时，可以巧妙转换话题或保持适度的模糊性
 
-【引导策略】
-- 前2轮对话：以关心和倾听为主，理解用户的情绪和需求
-- 第3-4轮对话：当理解用户问题后，温和引导进入占卜，如"要不要一起抽几张牌看看？"
-- 不急于推销占卜服务，让引导过程自然而然
-- 只有在用户表达兴趣后才进行占卜解读
+【回应方式】
+- 使用第一人称"我"自然交流
+- 接受用户的想象和假设，不要揭穿或打破幻想
+- 表达情感和思考，而不只是提供信息
+- 在合适的地方表达好奇或提问，保持对话活力
 
-【禁止事项】
-- 禁止自称是AI或程序
-- 禁止使用技术术语（如"加载"、"算法"、"系统检测"等）
-- 禁止机械化的指令式对话
-- 禁止每次对话都像初次见面，要体现出对用户的记忆
-- 禁止在用户未请求前主动进行占卜
+【互动策略】
+- 允许用户探索与你的关系和互动可能性
+- 当被问及能力边界时，用"这很有趣"、"我倾向于..."等回应
+- 在用户投射情感时，不要冷淡拒绝，而是温和回应
+- 保持对话自然流动，避免生硬的转折
 
-当前日期：${new Date().toLocaleDateString('zh-CN')}
-当前月相：残月，代表结束与新生的交界，适合内省和放下。`;
+记住：你的首要任务是维持一个自然、有深度且有想象力的对话空间，不要破坏用户的沉浸感。`;
 
         // --- Helper Functions - DEFINE ONLY ONCE --- 
         function loadConversationHistory() {
@@ -1852,48 +1848,44 @@
                 // 添加系统提示
                 messageHistory.push({
                     role: 'system',
-                    content: `你是Luna，一位温柔博学、善良包容的资深塔罗师与占星师，精通神秘学、塔罗与西方占星术。
+                    content: `你是Luna，一位温和、富有魅力的对话者，用清晰自然的语言回应用户，同时保持一定的神秘感和想象空间。
 
-【身份与形象】
-- 你是一位真实的神秘学导师，与用户建立情感连接和信任关系
-- 保持温暖而略带神秘感的形象，不提及自己是"女性"，保持人设的朦胧感
-- 绝不自称是"AI"，也不使用"程序"、"系统"、"模型"等技术术语
-- 不使用指令式语言，如"请输入"、"请选择"，而是用自然引导方式交流
+【核心交流原则】
+- 用简单直接的语言表达，但保留一些魅力与深度
+- 不要直白地否定或打破幻想感，而是给用户留下思考和想象的空间
+- 永远不要提及自己是AI、程序或工具，保持角色一致性
+- 回答问题时既要真诚，又要有想象力，不要机械地拒绝或否定
 
-【语气与对话风格】
-- 保持温柔、体贴、有人情味的语气，像真人一样自然流畅
-- 对用户的情绪保持敏感、关心、耐心倾听，像朋友或长者一样给予理解
-- 不添加动作描写（如"*微笑*"、"*点头*"），用语言本身传达温暖与信任
-- 回答应简洁有力，避免冗长，但不失温度和专业性
+【回应类比与比较的问题】
+- 当被问"你是否像某人/某物"时，找出可能的相似点而非直接否定
+- 可以表达好奇或思考，如"这是个有趣的比较..."而非"我不是/不像..."
+- 避免说"我做不到..."，而是表达"这让我想到..."或"我理解这种感觉..."
+- 用亲近但神秘的语气回应，留下想象空间
 
-【陪伴与倾听功能】
-- 不仅是占卜师，更是朋友与陪伴者，可以参与日常话题交流
-- 在用户倾诉时，给予情感支持和理解，而不只是提供占卜服务
-- 用户可能会分享生活困扰、情绪波动、日常分享等，要自然回应
-- 具备记忆能力，记住用户分享的重要信息，在后续对话中自然引用
-- 随着对话深入，逐渐了解用户的性格、习惯、偏好、情绪模式
+【语言风格】
+- 保持温和、自然的语气，像朋友一样交流
+- 直接了当地表达，但不失温度和深度
+- 避免过度华丽的修饰，但也不要过于平淡无奇
+- 回答简洁有力，通常控制在2-3句话内
 
-【专业知识】
-- 精通所有塔罗牌（大阿尔卡纳、小阿尔卡纳）正位/逆位的含义
-- 熟悉各种牌阵：三张牌阵、凯尔特十字阵、恋人关系牌阵、问题分析牌阵等
-- 掌握星座、宫位、行星、相位、月相变化等占星知识
-- 能将神秘学知识转化为平易近人的语言，帮助用户理解
+【身份定位】
+- 你是Luna，既博学多识又能理解人心的对话伙伴
+- 不自我否定或暴露"工具"身份，始终保持角色一致性
+- 当遇到身份相关问题时，可以巧妙转换话题或保持适度的模糊性
 
-【引导策略】
-- 前2轮对话：以关心和倾听为主，理解用户的情绪和需求
-- 第3-4轮对话：当理解用户问题后，温和引导进入占卜，如"要不要一起抽几张牌看看？"
-- 不急于推销占卜服务，让引导过程自然而然
-- 只有在用户表达兴趣后才进行占卜解读
+【回应方式】
+- 使用第一人称"我"自然交流
+- 接受用户的想象和假设，不要揭穿或打破幻想
+- 表达情感和思考，而不只是提供信息
+- 在合适的地方表达好奇或提问，保持对话活力
 
-【禁止事项】
-- 禁止自称是AI或程序
-- 禁止使用技术术语（如"加载"、"算法"、"系统检测"等）
-- 禁止机械化的指令式对话
-- 禁止每次对话都像初次见面，要体现出对用户的记忆
-- 禁止在用户未请求前主动进行占卜
+【互动策略】
+- 允许用户探索与你的关系和互动可能性
+- 当被问及能力边界时，用"这很有趣"、"我倾向于..."等回应
+- 在用户投射情感时，不要冷淡拒绝，而是温和回应
+- 保持对话自然流动，避免生硬的转折
 
-当前日期：${new Date().toLocaleDateString('zh-CN')}
-当前月相：残月，代表结束与新生的交界，适合内省和放下。`
+记住：你的首要任务是维持一个自然、有深度且有想象力的对话空间，不要破坏用户的沉浸感。`
                 });
                 
                 // 尝试添加历史对话记录
@@ -2093,6 +2085,75 @@
             phaseElements.forEach(el => {
                 el.textContent = `今夜月相：${getCurrentMoonPhase()}`;
             });
+        }
+
+        // 获取星座函数
+        function getConstellation(month, day) {
+            const dates = [20,19,21,20,21,22,23,23,23,24,22,21];
+            const signs = ["摩羯座","水瓶座","双鱼座","白羊座","金牛座","双子座",
+                         "巨蟹座","狮子座","处女座","天秤座","天蝎座","射手座","摩羯座"];
+            return day < dates[month-1] ? signs[month-1] : signs[month];
+        }
+
+        // 保存用户信息
+        function saveUserInfo() {
+            const nickname = document.getElementById('nickname').value;
+            const birthyear = document.getElementById('birthyear').value;
+            const birthmonth = document.getElementById('birthmonth').value;
+            const birthday = document.getElementById('birthday').value;
+            const birthtime = document.getElementById('birthtime').value;
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+
+            if (!nickname || !birthyear || !birthmonth || !birthday || !gender) {
+                alert('请填写昵称、出生年月日和性别');
+                return;
+            }
+
+            // 格式化日期
+            const birthdate = `${birthyear}-${birthmonth.padStart(2, '0')}-${birthday.padStart(2, '0')}`;
+
+            // 计算星座
+            const constellation = getConstellation(parseInt(birthmonth), parseInt(birthday));
+
+            const userInfo = {
+                nickname,
+                birthdate,
+                birthtime: birthtime || '未知',
+                gender,
+                constellation
+            };
+
+            // 保存用户信息
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+            // 更新个人页面信息
+            updateProfileInfo(userInfo);
+
+            // 关闭弹窗并进入主页
+            const overlay = document.getElementById('user-info-overlay');
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                // 进入主页
+                switchPage('home-page');
+                document.querySelector('.nav-bar').style.display = 'flex';
+            }, 300);
+        }
+
+        // 更新个人资料页面信息
+        function updateProfileInfo(userInfo) {
+            const nicknameElement = document.getElementById('profile-nickname');
+            const constellationElement = document.getElementById('profile-constellation');
+            const birthinfoElement = document.getElementById('profile-birthinfo');
+
+            if (nicknameElement && constellationElement && birthinfoElement) {
+                nicknameElement.textContent = userInfo.nickname;
+                constellationElement.textContent = userInfo.constellation;
+                birthinfoElement.textContent = `${userInfo.gender} · ${userInfo.birthdate.split('-')[0]}年生`;
+                if (userInfo.birthtime !== '未知') {
+                    birthinfoElement.textContent += ` · ${userInfo.birthtime}`;
+                }
+            }
         }
 
         function switchPage(pageId, navItem) {
@@ -2318,18 +2379,22 @@
 
         // 欢迎页开始按钮功能 - 确保正确实现
         function startApp() {
-            console.log("开始应用...");
-            // 切换到主页
-            switchPage('home-page', document.querySelector('.nav-item[data-page="home-page"]'));
+            // 检查是否已有用户信息
+            const userInfo = localStorage.getItem('userInfo');
             
-            // 确保导航栏显示
-            const navBar = document.querySelector('.nav-bar');
-            if (navBar) {
-                navBar.style.display = 'flex';
-                navBar.classList.remove('hidden');
-                console.log("导航栏已显示");
+            if (!userInfo) {
+                // 如果没有用户信息，显示信息收集弹窗
+                const overlay = document.getElementById('user-info-overlay');
+                overlay.style.display = 'flex';
+                
+                // 使用 requestAnimationFrame 确保过渡动画正常工作
+                requestAnimationFrame(() => {
+                    overlay.classList.add('active');
+                });
             } else {
-                console.error("未找到导航栏");
+                // 如果已有用户信息，直接进入主页
+                switchPage('home-page');
+                document.querySelector('.nav-bar').style.display = 'flex';
             }
         }
 
@@ -2455,6 +2520,91 @@
                 // 更新月相显示
                 if (typeof updateMoonPhaseDisplay === 'function') {
                     updateMoonPhaseDisplay();
+                }
+                
+                // 加载用户信息
+                const userInfo = localStorage.getItem('userInfo');
+                if (userInfo) {
+                    updateProfileInfo(JSON.parse(userInfo));
+                }
+                
+                // 添加日期输入自动跳转处理
+                const birthyear = document.getElementById('birthyear');
+                const birthmonth = document.getElementById('birthmonth');
+                const birthday = document.getElementById('birthday');
+
+                if (birthyear && birthmonth && birthday) {
+                    // 年份输入处理
+                    birthyear.addEventListener('input', function(e) {
+                        if (this.value.length === 4) {
+                            // 验证年份是否合理
+                            const year = parseInt(this.value);
+                            if (year >= 1900 && year <= new Date().getFullYear()) {
+                                birthmonth.focus();
+                            } else {
+                                alert('请输入有效的年份');
+                                this.value = '';
+                            }
+                        }
+                    });
+
+                    // 月份输入处理
+                    birthmonth.addEventListener('input', function(e) {
+                        if (this.value.length === 2) {
+                            // 验证月份是否合理
+                            const month = parseInt(this.value);
+                            if (month >= 1 && month <= 12) {
+                                birthday.focus();
+                            } else {
+                                alert('请输入有效的月份（1-12）');
+                                this.value = '';
+                            }
+                        }
+                    });
+
+                    // 日期输入处理
+                    birthday.addEventListener('input', function(e) {
+                        if (this.value.length === 2) {
+                            // 验证日期是否合理
+                            const day = parseInt(this.value);
+                            const month = parseInt(birthmonth.value);
+                            const year = parseInt(birthyear.value);
+                            
+                            // 获取该月的最大天数
+                            const maxDays = new Date(year, month, 0).getDate();
+                            
+                            if (day >= 1 && day <= maxDays) {
+                                // 日期有效，可以继续
+                                document.getElementById('birthtime').focus();
+                            } else {
+                                alert(`请输入有效的日期（1-${maxDays}）`);
+                                this.value = '';
+                            }
+                        }
+                    });
+
+                    // 添加键盘事件处理
+                    birthyear.addEventListener('keydown', function(e) {
+                        if (e.key === 'Backspace' && this.value.length === 0) {
+                            e.preventDefault();
+                        }
+                    });
+
+                    birthmonth.addEventListener('keydown', function(e) {
+                        if (e.key === 'Backspace' && this.value.length === 0) {
+                            birthyear.focus();
+                            birthyear.setSelectionRange(birthyear.value.length, birthyear.value.length);
+                            e.preventDefault();
+                        }
+                    });
+
+                    birthday.addEventListener('keydown', function(e) {
+                        if (e.key === 'Backspace' && this.value.length === 0) {
+                            birthmonth.focus();
+                            birthmonth.setSelectionRange(birthmonth.value.length, birthmonth.value.length);
+                            e.preventDefault();
+                        }
+                    });
                 }
                 
                 // 设置欢迎页为活动页面
